@@ -1,0 +1,35 @@
+{
+    "name": "gpt-oss-120b-vllm",
+    "build": {
+      "dockerfile": "Dockerfile"
+    },
+    "runArgs": [
+      "--gpus", "\"device=5,6\"",
+      "--shm-size=64gb",
+      "--ulimit", "memlock=-1",
+      "--ulimit", "stack=67108864",
+      "--ipc=host"
+    ],
+    "features": {},
+    "containerEnv": {
+      "PYTHONUNBUFFERED": "1"
+    },
+    "customizations": {
+      "vscode": {
+        "extensions": [
+            "ms-python.python",
+            "ms-toolsai.jupyter",
+            "innerlee.nvidia-smi",
+            "Leonardo16.nvidia-gpu",
+            "RSIP-Vision.nvidia-smi-plus"
+        ]
+      }
+    },
+    "mounts": [
+		"source=/raid/vllm,target=/app/vllm,type=bind,consistency=cached"
+	],
+
+	"postStartCommand": "vllm serve openai/gpt-oss-120b --gpu-memory-utilization 0.95 --tensor-parallel-size 2 --download-dir /app/vllm --port 8008"
+
+  }
+  
