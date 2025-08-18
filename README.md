@@ -38,11 +38,6 @@ It uses an OpenAI-like planner–executor loop on top of a [vLLM](https://github
 │   ├── file_ops.py
 │   ├── logging.py
 │   └── search.py
-├── app/                   # Example application (modifiable by agent)
-│   ├── main.py
-│   ├── section1.py
-│   ├── section2.py
-│   └── section3.py
 ├── test_project/           # Dockerized test project
 │   ├── Dockerfile
 │   ├── requirements.txt
