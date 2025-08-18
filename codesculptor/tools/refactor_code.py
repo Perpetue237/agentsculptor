@@ -1,16 +1,15 @@
 # tools/refactor_code.py
 import os
 import re
-from llm.client import VLLMClient
+from codesculptor.llm.client import VLLMClient
 
 
 class RefactorCodeTool:
-    def __init__(
-        self,
-        base_url: str = "http://localhost:8008",
-        model: str = "openai/gpt-oss-120b"
-    ):
-        self.llm_client = VLLMClient(base_url=base_url, model=model)
+    def __init__(self, base_url=None, model=None):
+        # Read from environment if not explicitly passed
+        self.base_url = (base_url or os.environ.get("VLLM_URL", "http://localhost:8008")).rstrip("/")
+        self.model = model or os.environ.get("VLLM_MODEL", "openai/gpt-oss-120b")
+        self.llm_client = VLLMClient(base_url=self.base_url, model=self.model)
 
     def _clean_code_content(self, content: str) -> str:
         """Strip markdown fences and whitespace from LLM output."""

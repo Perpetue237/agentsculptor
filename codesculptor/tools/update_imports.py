@@ -1,9 +1,12 @@
 # tools/update_imports.py
 import os
 import re
-from llm.client import VLLMClient
+from codesculptor.llm.client import VLLMClient
 
-llm_client = VLLMClient(base_url="http://localhost:8008", model="openai/gpt-oss-120b")
+base_url = (None or os.environ.get("VLLM_URL", "http://localhost:8008")).rstrip("/")
+model = None or os.environ.get("VLLM_MODEL", "openai/gpt-oss-120b")
+
+llm_client = VLLMClient(base_url=base_url, model=model)
 
 
 def update_imports(project_path: str, relative_path: str, instruction: str = None, context: str = None):

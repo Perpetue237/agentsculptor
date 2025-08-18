@@ -1,8 +1,9 @@
 # agent/planner.py
 import json
 from typing import Any, Dict, List, Optional
-from llm.client import VLLMClient
-from tools.registry import TOOL_REGISTRY, TOOL_SIGNATURES
+from codesculptor.llm.client import VLLMClient
+from codesculptor.tools.registry import TOOL_REGISTRY, TOOL_SIGNATURES
+import os
 
 def format_tool_list(tool_registry: List[Dict]) -> str:
     return "\n".join(
@@ -105,8 +106,11 @@ def _extract_json_from_text(text: str) -> Optional[str]:
     return None
 
 class PlannerAgent:
-    def __init__(self, base_url: str = "http://localhost:8008", model: str = "openai/gpt-oss-120b"):
-        self.client = VLLMClient(base_url=base_url, model=model)
+    def __init__(self, base_url=None, model=None):
+        # Read from environment if not explicitly passed
+        self.base_url = (base_url or os.environ.get("VLLM_URL", "http://localhost:8008")).rstrip("/")
+        self.model = model or os.environ.get("VLLM_MODEL", "openai/gpt-oss-120b")
+        self.client = VLLMClient(base_url=self.base_url, model=self.model)
 
     def generate_tool_calls(
         self,
