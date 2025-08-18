@@ -143,7 +143,7 @@ pip install -r requirements.txt
 Inside the container:
 
 ```bash
-python main.py ./app "Refactor section1.py to extract helper functions"
+ python3 main.py test_project "add comments to all my python files"
 ```
 
 The agent will use **vLLM** to plan, refactor, and test your project automatically.
