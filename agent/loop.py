@@ -1,3 +1,4 @@
+# agent/loop.py
 import os
 import subprocess
 from utils.file_ops import write_file, move_file, backup_file, modify_file, analyze_file
