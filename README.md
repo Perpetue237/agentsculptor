@@ -307,10 +307,10 @@ flowchart TD
     D -->|create_file| D2[File Creation]
     D -->|refactor_code| D3[Refactor Code]
     D -->|update_imports| D4[Update Imports]
-    D -->|run_tests| D5[Run Tests]
-    D -->|format_code| D6[Format Code]
-    D5 -->|Tests Fail| B
-    D5 -->|Tests Pass| E[Success ✅]
+    D -->|format_code| D5[Format Code]
+    D -->|run_tests| D6[Run Tests]
+    D6 -->|Tests Fail| B
+    D6 -->|Tests Pass| E[Success ✅]
 ```
 
 ---
