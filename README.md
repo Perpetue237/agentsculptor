@@ -29,7 +29,13 @@ It uses an OpenAI-like planner–executor loop on top of a [vLLM](https://github
     - [🔁 Agent Loop (Execution Layer)](#-agent-loop-execution-layer)
     - [🛠️ Tools (Action Layer)](#️-tools-action-layer)
     - [♻️ Re-Planning \& Self-Healing (Future)](#️-re-planning--self-healing-future)
-  - [Contributions](#contributions)
+  - [🤝 Contributions](#-contributions)
+    - [1. 🛠️ Setup Your Environment](#1-️-setup-your-environment)
+    - [2. 🔧 Make Your Changes](#2--make-your-changes)
+    - [3. 🧪 Test Your Changes](#3--test-your-changes)
+    - [4. 📦 Commit \& Submit](#4--commit--submit)
+    - [5. ⚡ Code Review](#5--code-review)
+    - [6. 🎉 Celebrate!](#6--celebrate)
   - [📄 License](#-license)
 
 
@@ -329,9 +335,52 @@ flowchart TD
 
 ---
 
-## Contributions
+## 🤝 Contributions
 
-*
+We welcome contributions of all types—bug fixes, feature enhancements, documentation improvements, or new tools. Here's how you can help:
+
+### 1. 🛠️ Setup Your Environment
+Clone the repository and install in editable mode:
+
+```bash
+git clone https://github.com/Perpetue237/codesculptor.git
+cd codesculptor
+pip install -e .
+```
+Set up required environment variables:
+
+```bash
+export VLLM_URL="http://localhost:8008"
+export VLLM_MODEL="openai/gpt-oss-120b"
+```
+
+### 2. 🔧 Make Your Changes
+Add features: Create new tools or improve the agent workflow.
+
+Refactor code: Improve readability, structure, or performance.
+
+Fix bugs: Check the issues list and pick tasks you can solve.
+
+Update documentation: Keep README, comments, and examples up to date.
+
+### 3. 🧪 Test Your Changes
+Run the automated test suite or add your own:
+
+```bash
+pytest
+``` 
+### 4. 📦 Commit & Submit
+Use clear, descriptive commit messages.
+
+Push your branch and open a Pull Request (PR).
+
+Include a description of your change and reference related issues.
+
+### 5. ⚡ Code Review
+All contributions go through review for quality and safety. Be ready to iterate on feedback.
+
+### 6. 🎉 Celebrate!
+Once approved and merged, your contribution becomes part of CodeSculptor!
 
 ---
 
