@@ -304,12 +304,12 @@ flowchart TD
     B -->|Generates JSON Plan| C[Agent Loop]
     C --> D[Tools]
     D -->|backup_file| D1[Backup]
-    D -->|create_file| D2[File Creation]
-    D -->|refactor_code| D3[Refactor Code]
-    D -->|update_imports| D4[Update Imports]
-    D -->|format_code| D5[Format Code]
-    D -->|run_tests| D6[Run Tests]
-    D6 -->|Tests Fail| B
+    D <-->|create_file| D2[File Creation]
+    D <-->|refactor_code| D3[Refactor Code]
+    D <-->|update_imports| D4[Update Imports]
+    D <-->|format_code| D5[Format Code]
+    D <-->|run_tests| D6[Run Tests]
+    D6 <-->|Tests Fail| B
     D6 -->|Tests Pass| E[Success ✅]
 ```
 
