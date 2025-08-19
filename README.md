@@ -300,17 +300,22 @@ This section emphasizes the structured loop, safety-first approach, and extensib
 
 ``` mermaid
 flowchart TD
-    A[User Request] --> B[Planner Agent]
-    B -->|Generates JSON Plan| C[Agent Loop]
-    C --> D[Tools]
-    D -->|backup_file| D1[Backup]
-    D <-->|create_file| D2[File Creation]
-    D <-->|refactor_code| D3[Refactor Code]
-    D <-->|update_imports| D4[Update Imports]
-    D <-->|format_code| D5[Format Code]
-    D <-->|run_tests| D6[Run Tests]
-    D6 <-->|Tests Fail| B
-    D6 -->|Tests Pass| E[Success ✅]
+    A[🧑 User Request]
+    B[🧠 Planner Agent]
+    C[🔁 Agent Loop]
+    D[🛠️ Tools]
+    E[✅ Success]
+
+    A --> B -->|Generates JSON Plan| C --> D
+    D --> D1[📦 Backup File]
+    D --> D2[📄 Create File]
+    D --> D3[🖋 Refactor Code]
+    D --> D4[🔗 Update Imports]
+    D --> D5[✨ Format Code]
+    D --> D6[🧪 Run Tests]
+
+    D6 -->|Tests Pass| E
+    D6 -->|Tests Fail| B
 ```
 
 ---
