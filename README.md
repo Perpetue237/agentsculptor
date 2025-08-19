@@ -5,6 +5,65 @@ It uses an OpenAI-like planner–executor loop on top of a [vLLM](https://github
 
 ---
 
+## 🚀 Getting Started / Usage
+
+Follow these steps to install and use **CodeSculptor**:
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Perpetue237/codesculptor.git
+cd codesculptor
+```
+
+### 2. Install the package
+
+Use editable mode to allow local changes:
+
+```bash
+pip install -e .
+```
+
+### 3. Set environment variables
+
+CodeSculptor requires a running vLLM server. Set:
+
+```bash
+export VLLM_URL="http://localhost:8008"
+export VLLM_MODEL="openai/gpt-oss-120b"
+```
+
+Adjust according to your server setup.
+
+### 4. Run CLI commands
+
+Generate or refactor code with `codesculptor-cli`. For example, to create a basic Dockerized FastAPI app:
+
+```bash
+codesculptor-cli ./test_project "create files for a basic dockerized FastAPI application. The initial app should just return a JSON with 'hello to the OpenAI community'"
+```
+
+This will:
+
+* Generate a minimal FastAPI app structure.
+* Create Dockerfiles for containerization.
+* Initialize the project in `./test_project`.
+
+### 5. Other examples
+
+* Merge multiple Python modules into a single file.
+* Refactor functions and automatically generate unit tests.
+* Update imports across the project after refactoring.
+
+### 6. Workflow Overview
+
+1. `prepare_context` scans your project.
+2. `PlannerAgent` outputs a structured JSON plan.
+3. `AgentLoop` executes each tool step by step.
+4. Tests are run automatically (existing or generated).
+5. Changes are applied safely, with backups if needed.
+
+
 ## 🚀 Features
 
 * 📂 **Project Context Builder** – Parses files, functions, classes, and imports.
