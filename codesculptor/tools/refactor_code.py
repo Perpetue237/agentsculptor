@@ -15,8 +15,14 @@ class RefactorCodeTool:
         self.llm_client = VLLMClient(base_url=self.base_url, model=self.model)
 
     def _clean_code_content(self, content: str) -> str:
-        """Strip markdown fences and whitespace from LLM output."""
-        return re.sub(r"^```(?:python)?\n|```$", "", content.strip(), flags=re.MULTILINE).strip()
+        """Strip markdown fences (any language) and whitespace from LLM output."""
+        return re.sub(
+            r"^```[a-zA-Z0-9]*\n|```$",
+            "",
+            content.strip(),
+            flags=re.MULTILINE
+        ).strip()
+
 
     def _detect_source_files(self, instruction: str) -> list:
         """Try to extract .py file names from the refactor instruction."""
