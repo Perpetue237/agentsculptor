@@ -16,13 +16,11 @@ It uses an OpenAI-like planner–executor loop on top of a [vLLM](https://github
     - [6. Workflow Overview](#6-workflow-overview)
   - [🚀 Features](#-features)
   - [📦 Repository Structure](#-repository-structure)
-  - [⚡ Quick Setup with DevContainer](#-quick-setup-with-devcontainer)
+  - [⚡ Developer Guide with DevContainer](#-developer-guide-with-devcontainer)
     - [1. DevContainer](#1-devcontainer)
     - [2. Dockerfile](#2-dockerfile)
     - [3. Python Dependencies](#3-python-dependencies)
     - [4. Start the DevContainer](#4-start-the-devcontainer)
-    - [5. Using the Agent](#5-using-the-agent)
-  - [⚡ Usage](#-usage)
     - [Workflow](#workflow)
   - [🛠️ Tools Available](#️-tools-available)
   - [👨‍💻 Coding](#-coding)
@@ -135,7 +133,7 @@ This will:
 
 ---
 
-## ⚡ Quick Setup with DevContainer
+## ⚡ Developer Guide with DevContainer
 
 This repository provides a **VS Code DevContainer** for an optimized development environment with GPU support and vLLM.
 
@@ -171,7 +169,7 @@ Create `.devcontainer/devcontainer.json`:
     }
   },
   "mounts": [
-    "source=/raid/vllm,target=/app/vllm,type=bind,consistency=cached"
+    "source=/raid/vllm,target=/app/vllm,type=bind,consistency=cached" # assumed you have /raid/vllm folder on your local computer
   ],
   "postStartCommand": "vllm serve openai/gpt-oss-120b --gpu-memory-utilization 0.95 --tensor-parallel-size 2 --download-dir /app/vllm --port 8008"
 }
@@ -208,14 +206,8 @@ EXPOSE 8008
 ```
 black
 pytest
+commitizen
 ```
-
-Install dependencies inside the container:
-
-```bash
-pip install -r requirements.txt
-```
-
 ---
 
 ### 4. Start the DevContainer
@@ -225,33 +217,6 @@ pip install -r requirements.txt
 3. The `postStartCommand` will automatically launch **vLLM server** on port `8008`.
 
 ---
-
-### 5. Using the Agent
-
-Inside the container:
-
-```bash
- python3 main.py test_project "add comments to all my python files"
-```
-
-The agent will use **vLLM** to plan, refactor, and test your project automatically.
-
----
-
-## ⚡ Usage
-
-Run the CLI with:
-
-```bash
-python main.py <project_path> "<user_request>"
-```
-
-Example:
-
-```bash
-python main.py ./app "Refactor section1.py to extract helper functions"
-```
-
 ### Workflow
 
 1. `prepare_context` scans your project files.
