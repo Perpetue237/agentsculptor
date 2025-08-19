@@ -21,7 +21,8 @@
             "ms-toolsai.jupyter",
             "innerlee.nvidia-smi",
             "Leonardo16.nvidia-gpu",
-            "RSIP-Vision.nvidia-smi-plus"
+            "RSIP-Vision.nvidia-smi-plus",
+            "yzhang.markdown-all-in-one"
         ]
       }
     },

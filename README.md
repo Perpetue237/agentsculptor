@@ -4,6 +4,35 @@
 It uses an OpenAI-like planner–executor loop on top of a [vLLM](https://github.com/vllm-project/vllm) backend, combining project context analysis, structured tool calls, and iterative refinement.
 
 ---
+## Table of Content
+- [CodeSculptor](#codesculptor)
+  - [Table of Content](#table-of-content)
+  - [🚀 Getting Started / Usage](#-getting-started--usage)
+    - [1. Clone the repository](#1-clone-the-repository)
+    - [2. Install the package](#2-install-the-package)
+    - [3. Set environment variables](#3-set-environment-variables)
+    - [4. Run CLI commands](#4-run-cli-commands)
+    - [5. Other examples](#5-other-examples)
+    - [6. Workflow Overview](#6-workflow-overview)
+  - [🚀 Features](#-features)
+  - [📦 Repository Structure](#-repository-structure)
+  - [⚡ Quick Setup with DevContainer](#-quick-setup-with-devcontainer)
+    - [1. DevContainer](#1-devcontainer)
+    - [2. Dockerfile](#2-dockerfile)
+    - [3. Python Dependencies](#3-python-dependencies)
+    - [4. Start the DevContainer](#4-start-the-devcontainer)
+    - [5. Using the Agent](#5-using-the-agent)
+  - [⚡ Usage](#-usage)
+    - [Workflow](#workflow)
+  - [🛠️ Tools Available](#️-tools-available)
+  - [👨‍💻 Coding](#-coding)
+    - [Development Setup](#development-setup)
+    - [How It Works](#how-it-works)
+  - [🌍 Roadmap](#-roadmap)
+  - [📄 License](#-license)
+
+
+---
 
 ## 🚀 Getting Started / Usage
 
