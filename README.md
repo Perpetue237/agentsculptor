@@ -355,13 +355,13 @@ export VLLM_MODEL="openai/gpt-oss-120b"
 ```
 
 ### 2. 🔧 Make Your Changes
-Add features: Create new tools or improve the agent workflow.
+* **Add features**: Create new tools or improve the agent workflow.
 
-Refactor code: Improve readability, structure, or performance.
+* **Refactor code**: Improve readability, structure, or performance.
 
-Fix bugs: Check the issues list and pick tasks you can solve.
+* **Fix bugs**: Check the issues list and pick tasks you can solve.
 
-Update documentation: Keep README, comments, and examples up to date.
+* **Update documentation**: Keep README, comments, and examples up to date.
 
 ### 3. 🧪 Test Your Changes
 Run the automated test suite or add your own:
@@ -370,11 +370,11 @@ Run the automated test suite or add your own:
 pytest
 ``` 
 ### 4. 📦 Commit & Submit
-Use clear, descriptive commit messages.
+* Use clear, descriptive commit messages.
 
-Push your branch and open a Pull Request (PR).
+* Push your branch and open a Pull Request (PR).
 
-Include a description of your change and reference related issues.
+* Include a description of your change and reference related issues.
 
 ### 5. ⚡ Code Review
 All contributions go through review for quality and safety. Be ready to iterate on feedback.
