@@ -23,6 +23,7 @@ It uses an OpenAI-like planner–executor loop on top of a [vLLM](https://github
     - [4. Start the DevContainer](#4-start-the-devcontainer)
     - [Workflow](#workflow)
   - [🛠️ Tools Available](#️-tools-available)
+    - [💡 Usage Notes](#-usage-notes)
   - [⚙️ How It Works](#️-how-it-works)
     - [📋 Planner Agent (Reasoning Layer)](#-planner-agent-reasoning-layer)
     - [🔁 Agent Loop (Execution Layer)](#-agent-loop-execution-layer)
@@ -228,15 +229,26 @@ commitizen
 5. Changes are applied safely (backup first).
 
 ---
-
 ## 🛠️ Tools Available
 
-* **create\_file** → Create new source files.
-* **backup\_file** → Backup existing files before modifications.
-* **update\_imports** → Fix imports across files.
-* **refactor\_code** → Apply structured code transformations.
-* **run\_tests** → Execute test suite or generated tests.
-* **format\_code** → Run `black` to auto-format.
+Each tool in **CodeSculptor** has a **name, description, and parameters**. You can use these tools via the CLI or programmatically.
+
+| Tool | Description | Parameters | Example Usage |
+|------|-------------|------------|---------------|
+| **💾 `backup_file`** | Backup a file before modification to ensure safety. | `path` (string) → File path to backup | `{"path": "app/main.py"}` |
+| **📄 `create_file`** | Create a new file with content. | `path` (string), `content` (string) → File path and initial content | `{"path": "app/utils.py", "content": "def helper(): pass"}` |
+| **🖋️ `refactor_code`** | Refactor an existing file according to instructions. | `path` (string), `instruction` (string) → File to refactor and the transformation instruction | `{"path": "app/main.py", "instruction": "Extract helper functions from main()"}` |
+| **🔗 `update_imports`** | Update imports across files to use new module paths. | `path` (string), `instruction` (string) → File or folder to scan/update and guidance | `{"path": "app/", "instruction": "Replace old module imports with mathlib.py"}` |
+| **🧪 `run_tests`** | Run the project test suite to ensure changes are safe. | None | `{"path": ""}` |
+| **🎨 `format_code`** | Format code using Black to maintain consistent style. | `path` (string) → File or directory to format | `{"path": "app/"}` |
+
+### 💡 Usage Notes
+
+- **Order matters**: Typically, `backup_file` runs before `refactor_code` or `update_imports`.  
+- **Chaining tools**: You can combine `create_file`, `refactor_code`, and `update_imports` in a single workflow.  
+- **Tests & safety**: Run `run_tests` after code modifications to catch issues automatically.  
+- **Formatting**: `format_code` can be applied at the end of the workflow for clean, readable code.  
+
 
 ---
 
