@@ -16,17 +16,19 @@ It uses an OpenAI-like planner–executor loop on top of a [vLLM](https://github
     - [6. Workflow Overview](#6-workflow-overview)
   - [🚀 Features](#-features)
   - [📦 Repository Structure](#-repository-structure)
-  - [⚡ Developer Guide with DevContainer](#-developer-guide-with-devcontainer)
+  - [👨‍💻 Developer Guide with DevContainer](#-developer-guide-with-devcontainer)
     - [1. DevContainer](#1-devcontainer)
     - [2. Dockerfile](#2-dockerfile)
     - [3. Python Dependencies](#3-python-dependencies)
     - [4. Start the DevContainer](#4-start-the-devcontainer)
     - [Workflow](#workflow)
   - [🛠️ Tools Available](#️-tools-available)
-  - [👨‍💻 Coding](#-coding)
-    - [Development Setup](#development-setup)
-    - [How It Works](#how-it-works)
-  - [🌍 Roadmap](#-roadmap)
+  - [⚙️ How It Works](#️-how-it-works)
+    - [📋 Planner Agent (Reasoning Layer)](#-planner-agent-reasoning-layer)
+    - [🔁 Agent Loop (Execution Layer)](#-agent-loop-execution-layer)
+    - [🛠️ Tools (Action Layer)](#️-tools-action-layer)
+    - [♻️ Re-Planning \& Self-Healing (Future)](#️-re-planning--self-healing-future)
+  - [Contributions](#contributions)
   - [📄 License](#-license)
 
 
@@ -133,7 +135,7 @@ This will:
 
 ---
 
-## ⚡ Developer Guide with DevContainer
+## 👨‍💻 Developer Guide with DevContainer
 
 This repository provides a **VS Code DevContainer** for an optimized development environment with GPU support and vLLM.
 
@@ -238,40 +240,82 @@ commitizen
 
 ---
 
-## 👨‍💻 Coding
+## ⚙️ How It Works
 
-### Development Setup
+The CodeSculptor agent runs on an OpenAI-like planner–executor loop, designed to make structured, safe, and iterative changes to your codebase.
 
-Install dependencies:
+### 📋 Planner Agent (Reasoning Layer)
 
-```bash
-pip install -r test_project/requirements.txt
+Takes your natural language request (e.g., “merge utils.py and helpers.py into one module”).
+
+Uses the project context (functions, classes, imports) to understand the current codebase.
+
+Produces a structured JSON plan of tool calls – never free text.
+Example:
+
+json
+Kopieren
+Bearbeiten
+{
+  "action": "refactor_code",
+  "args": {
+    "path": "utils/helpers.py",
+    "instruction": "merge into utils.py"
+  }
+}
+
+### 🔁 Agent Loop (Execution Layer)
+
+Iterates through the planned tool calls one by one.
+
+Ensures dependencies are respected (e.g., backup → refactor → update imports → run tests).
+
+Captures logs and errors for each step, with the ability to retry.
+
+### 🛠️ Tools (Action Layer)
+
+The agent never edits files directly. Instead, it calls specialized tools:
+
+backup_file → snapshot before modifying.
+
+create_file → safely generate new files.
+
+refactor_code → apply structured code transformations.
+
+update_imports → keep imports consistent.
+
+run_tests → verify changes with pytest.
+
+format_code → ensure style consistency with black.
+
+This makes the workflow transparent, reproducible, and debuggable.
+
+### ♻️ Re-Planning & Self-Healing (Future)
+
+If a step fails (e.g., tests break), the agent will be able to re-plan automatically.
+
+The loop can feed test results or error logs back into the Planner Agent, generating a new plan until success.
+
+This section emphasizes the structured loop, safety-first approach, and extensibility of your agent.
+
+``` mermaid
+flowchart TD
+    A[User Request] --> B[Planner Agent]
+    B -->|Generates JSON Plan| C[Agent Loop]
+    C --> D[Tools]
+    D -->|backup_file| D1[Backup]
+    D -->|create_file| D2[File Creation]
+    D -->|refactor_code| D3[Refactor Code]
+    D -->|update_imports| D4[Update Imports]
+    D -->|run_tests| D5[Run Tests]
+    D -->|format_code| D6[Format Code]
+    D5 -->|Tests Fail| B
+    D5 -->|Tests Pass| E[Success ✅]
 ```
-
-Run tests:
-
-```bash
-pytest
-```
-
-Format code:
-
-```bash
-black .
-```
-
-### How It Works
-
-The agent follows an **OpenAI-like loop**:
-
-1. **Planner Agent** – Receives user request + context → outputs JSON plan.
-2. **Agent Loop** – Executes steps sequentially, ensuring dependencies are respected.
-3. **Tools** – Low-level operations (create, backup, refactor, imports, tests).
-4. **Re-Planning** (future) – If tests fail, the agent can retry with initial context.
 
 ---
 
-## 🌍 Roadmap
+## Contributions
 
 *
 
