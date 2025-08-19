@@ -102,7 +102,9 @@ class AgentLoop:
             return {"tool": tool, "status": "error", "args": args, "error": str(e)}
 
     def run(self, max_iterations=3):
-        for _ in range(max_iterations):
+        for iteration in range(max_iterations):
+            print(f"\n[ITERATION {iteration+1}] Planning...")
+
             try:
                 plan = self.planner.generate_tool_calls(
                     context=self.context,
@@ -113,7 +115,20 @@ class AgentLoop:
                 print("[FATAL] Could not generate plan:", e)
                 print("Please check that vLLM is running and reachable at your VLLM_URL.")
                 sys.exit(1)
+
+            if not plan:
+                print("[STOP] Planner returned no further actions. Exiting early.")
+                break
+
+            all_success = True
             for call in plan:
                 result = self.dispatch_tool_call(call)
                 self.execution_log.append(result)
                 print(f"[{result['status'].upper()}] {result['tool']} → {result.get('error', '')}")
+                if result["status"] != "success":
+                    all_success = False
+
+            # Early stop if everything in this plan succeeded
+            if all_success:
+                print("[STOP] All actions succeeded, stopping early.")
+                break

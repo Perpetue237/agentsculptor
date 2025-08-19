@@ -1,8 +1,3 @@
-# ✨ Sparkling Non-Pythonic Test Script ✨
-# 🌟 Welcome to the Lovely Non-Pythonic Test Script! 🌈✨
-
-
-# 👋 greet_user: greeting the user
 def greet_user():
     print("Welcome to the Non-Pythonic Test Script!")
     name = input("Enter your name: ")
@@ -10,7 +5,6 @@ def greet_user():
     return name
 
 
-# 🎂 ask_age: age check
 def ask_age():
     age = input("How old are you? ")
     try:
@@ -22,7 +16,6 @@ def ask_age():
     return age_int
 
 
-# 🔁 repeat_message: repeat a message multiple times
 def repeat_message(msg, times):
     i = 0
     while i < times:
@@ -30,7 +23,6 @@ def repeat_message(msg, times):
         i = i + 1
 
 
-# ⭐ favorite_numbers: collect favorite numbers
 def favorite_numbers():
     numbers = []
     i = 0
@@ -50,7 +42,6 @@ def favorite_numbers():
     return numbers
 
 
-# ➕➖✖️➗ simple_math: basic arithmetic operations
 def simple_math():
     a = input("Enter a number: ")
     b = input("Enter another number: ")
@@ -68,7 +59,6 @@ def simple_math():
         print("Invalid numbers.")
 
 
-# 🔄 simple_loop_test: loop test demonstration
 def simple_loop_test():
     i = 0
     while i < 5:
@@ -76,7 +66,6 @@ def simple_loop_test():
         i = i + 1
 
 
-# 🚀 main: main flow of the script
 def main():
     user_name = greet_user()
     user_age = ask_age()
