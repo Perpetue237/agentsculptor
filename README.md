@@ -299,7 +299,7 @@ The loop can feed test results or error logs back into the Planner Agent, genera
 This section emphasizes the structured loop, safety-first approach, and extensibility of your agent.
 
 ``` mermaid
-flowchart LR
+flowchart TD
     A[User Request] --> B[Planner Agent]
     B -->|Generates JSON Plan| C[Agent Loop]
     C --> D[Tools]
