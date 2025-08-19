@@ -303,16 +303,13 @@ flowchart TD
     A[User Request] --> B[Planner Agent]
     B -->|Generates JSON Plan| C[Agent Loop]
 
-    subgraph D[Tools]
-        D1[Backup]
-        D2[File Creation]
-        D3[Refactor Code]
-        D4[Update Imports]
-        D5[Format Code]
-        D6[Run Tests]
-    end
+    C --> D1[Backup]
+    C --> D2[File Creation]
+    C --> D3[Refactor Code]
+    C --> D4[Update Imports]
+    C --> D5[Format Code]
+    C --> D6[Run Tests]
 
-    C --> D
     D6 -->|Tests Fail| B
     D6 -->|Tests Pass| E[Success ✅]
 ```
