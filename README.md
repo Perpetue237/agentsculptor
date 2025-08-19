@@ -137,7 +137,7 @@ This will:
 |   |-- Dockerfile               # Docker container config for test project
 |   |-- main.py                  # Example application entrypoint
 |   |-- requirements.txt         # Test project dependencies
-|   `-- test_main.py              # Unit tests for test project
+|   `-- test_main.py             # Unit tests for test project
 `-- tests/                       # Tests for codesculptor itself (not the example project)
 ```
 
