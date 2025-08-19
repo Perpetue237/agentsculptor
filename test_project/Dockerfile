@@ -1,12 +1,20 @@
-# Use an official Python runtime as a parent image
-FROM python:3.9-slim
-
-# Set the working directory to /app
+```dockerfile
+# Base stage
+FROM python:3.10-slim AS base
 WORKDIR /app
 
-# Copy the requirements.txt and install dependencies
-COPY requirements.txt ./
+# App stage
+FROM base AS app
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+COPY app/ ./app/
+ENV APP_ENV=development
+CMD ["python", "app/main.py"]
 
-# Copy the rest of the application code
-COPY . .
+# Worker stage
+FROM base AS worker
+COPY worker-requirements.txt .
+RUN pip install --no-cache-dir -r worker-requirements.txt
+COPY worker/ ./worker/
+ENV WORKER_ENV=production
+CMD ["python", "worker/worker_main.py"]

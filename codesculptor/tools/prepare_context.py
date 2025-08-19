@@ -61,7 +61,7 @@ def prepare_context(project_path: str, include_content=True, max_content_chars=1
                 # For non-Python files, store limited text content for certain types
                 ext = os.path.splitext(file)[1]
                 file_info["type"] = ext
-                if include_content and ext in {".txt", ".md", ".json", ".yaml", ".yml"}:
+                if include_content and (ext in {".txt", ".md", ".json", ".yaml", ".yml"} or file.startswith("Dockerfile")):
                     try:
                         with open(file_path, "r", encoding="utf-8") as f:
                             content = f.read()

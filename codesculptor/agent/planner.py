@@ -5,7 +5,7 @@ from codesculptor.llm.client import VLLMClient
 from codesculptor.llm.prompts import planner_system_prompt
 import os
 
-def summarize_context(context: Dict[str, Any], max_files: int = 20, max_chars_per_file: int = 2000) -> str:
+def summarize_context(context: Dict[str, Any], max_files: int = 20, max_chars_per_file: int = 10000) -> str:
     lines = []
     files = context.get("files", {})
     folders = context.get("folders", [])

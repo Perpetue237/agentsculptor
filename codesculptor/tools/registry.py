@@ -70,6 +70,7 @@ TOOL_SIGNATURES = {
     "create_file": ["path", "content"],
     "modify_file": ["path", "content"],
     "backup_file": ["path"],
+    "format_code": ["path"],
     #"commit_changes": ["description"],
 }
 

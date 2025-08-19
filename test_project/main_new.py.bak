@@ -1,3 +1,4 @@
+# 🌟 Welcome to the Lovely Non-Pythonic Test Script! 🌈✨
 def greet_user():
     print("Welcome to the Non-Pythonic Test Script!")
     name = input("Enter your name: ")

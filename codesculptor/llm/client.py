@@ -1,5 +1,6 @@
 import requests
 
+
 class VLLMClient:
     def __init__(self, base_url="http://localhost:8008", model="openai/gpt-oss-120b"):
         self.base_url = base_url.rstrip("/")

@@ -19,6 +19,7 @@ def planner_system_prompt() -> str:
                 "- 'tool': name of the tool\n"
                 "- 'args': dictionary of arguments\n\n"
                 f"Available tools:\n{tool_list}\n\n"
+                "If you cannot perform an action say so and give the reason. Never noturn an error or an empty answer.\n"
                 "Rules:\n"
                 "1. Only return valid JSON — no markdown or commentary.\n"
                 "2. Do not invent tools not listed.\n"
@@ -29,7 +30,7 @@ def planner_system_prompt() -> str:
                 f"5. Use the exact argument names expected by each tool. Here are the expected argument names for each tool: {TOOL_SIGNATURES}. Please match them exactly.\n"
                 "6. Crutial: \n"
                     "- If the file was provided in the original context, always first create a testing code in the same folder as te file to test (also here holds Do not use relative imports (e.g., 'from .cli import main') or package-style imports (e.g., 'from app.cli import main'), test it and back it up before modifying it! \n"
-                    "- If the file was provided in the original context, run the test if provided. If not you can use actions from the tool registry to create a testing code in the same folder as the file to test. Choose a name prefixed by the name the file you want to write the test for. "
+                    "- If the file was provided in the original context, run the test if provided. If not you can use actions from the tool registry to create a testing code in the same folder as the file to test. Choose a name prefixed by the name the file you want to write the test for."
             )
     
 def refactor_system_prompt() -> str:
@@ -42,7 +43,8 @@ def refactor_system_prompt() -> str:
         "- Do not modify unrelated code.\n"
         "- Preserve style and formatting.\n"
         "- Use relative imports if needed.\n"
-        "- Return ONLY valid Python code — no comments, explanations, or markdown."
+        "- Return ONLY valid code — no comments, explanations, or markdown."
+        "- If you cannot perform an action say so and give the reason. Never noturn an error or an empty answer."
     )
 
 

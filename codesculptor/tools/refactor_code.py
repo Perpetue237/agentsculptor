@@ -39,6 +39,7 @@ class RefactorCodeTool:
 
 
     def refactor_file(self, project_path: str, relative_path: str, instruction: str) -> None:
+        print(relative_path, instruction)
         """
         Load the latest version of the file(s) from disk and send to the LLM
         along with the refactoring instruction. Save the updated code back to disk.
