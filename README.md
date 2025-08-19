@@ -302,16 +302,15 @@ This section emphasizes the structured loop, safety-first approach, and extensib
 flowchart TD
     A[User Request] --> B[Planner Agent]
     B -->|Generates JSON Plan| C[Agent Loop]
-
-    C --> D1[Backup]
-    C --> D2[File Creation]
-    C --> D3[Refactor Code]
-    C --> D4[Update Imports]
-    C --> D5[Format Code]
-    C --> D6[Run Tests]
-
-    D6 -->|Tests Fail| B
-    D6 -->|Tests Pass| E[Success ✅]
+    C --> D[Tools]
+    D -->|run_tests| D1[Run Tests]
+    D -->|backup_file| D2[Backup]
+    D <-->|create_file| D3[File Creation]
+    D <-->|refactor_code| D4[Refactor Code]
+    D <-->|update_imports| D5[Update Imports]
+    D <-->|format_code| D5[Format Code]
+    D1 -->|Tests Fail| B
+    D1 -->|Tests Pass| E[Success ✅]
 ```
 
 ---
