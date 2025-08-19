@@ -2,14 +2,9 @@
 import json
 from typing import Any, Dict, List, Optional
 from codesculptor.llm.client import VLLMClient
-from codesculptor.tools.registry import TOOL_REGISTRY, TOOL_SIGNATURES
+from codesculptor.llm.prompts import planner_system_prompt
 import os
 
-def format_tool_list(tool_registry: List[Dict]) -> str:
-    return "\n".join(
-        f"- '{tool['name']}': {tool['description']}" for tool in tool_registry
-    )
-    
 def summarize_context(context: Dict[str, Any], max_files: int = 20, max_chars_per_file: int = 2000) -> str:
     lines = []
     files = context.get("files", {})
@@ -120,25 +115,7 @@ class PlannerAgent:
         max_tokens: int = 10000,
         temperature: float = 0.0
     ) -> List[Dict]:
-        tool_list = format_tool_list(TOOL_REGISTRY)
-        system_prompt = (
-                "You are a software agent that plans and invokes tools to modify codebases.\n"
-                "Your job is to return a JSON array of tool calls. Each call must include:\n"
-                "- 'tool': name of the tool\n"
-                "- 'args': dictionary of arguments\n\n"
-                f"Available tools:\n{tool_list}\n\n"
-                "Rules:\n"
-                "1. Only return valid JSON — no markdown or commentary.\n"
-                "2. Do not invent tools not listed.\n"
-                "3. Use only the context and execution history provided.\n"
-                "4. When importing between files in the same folder, use direct imports like 'from cli import main'.\n"
-                "   Do not use relative imports (e.g., 'from .cli import main') or package-style imports (e.g., 'from app.cli import main').\n"
-                "   Assume the code will be run as a script from within the folder, not as a package.\n"
-                f"5. Use the exact argument names expected by each tool. Here are the expected argument names for each tool: {TOOL_SIGNATURES}. Please match them exactly.\n"
-                "6. Crutial: \n"
-                    "- If the file was provided in the original context, always first create a testing code in the same folder as te file to test (also here holds Do not use relative imports (e.g., 'from .cli import main') or package-style imports (e.g., 'from app.cli import main'), test it and back it up before modifying it! \n"
-                    "- If the file was provided in the original context, run the test if provided. If not you can use actions from the tool registry to create a testing code in the same folder as the file to test. Choose a name prefixed by the name the file you want to write the test for. "
-            )
+        system_prompt = planner_system_prompt()
 
 
         user_prompt = (

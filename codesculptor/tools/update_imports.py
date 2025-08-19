@@ -2,6 +2,8 @@
 import os
 import re
 from codesculptor.llm.client import VLLMClient
+from codesculptor.llm.prompts import build_import_messages
+
 
 base_url = (None or os.environ.get("VLLM_URL", "http://localhost:8008")).rstrip("/")
 model = None or os.environ.get("VLLM_MODEL", "openai/gpt-oss-120b")
@@ -33,41 +35,16 @@ def update_imports(project_path: str, relative_path: str, instruction: str = Non
         original_code = f.read()
 
     if not instruction:
-        # Simple regex fallback when no LLM instruction is provided
-        replacements = {
-            r"from\s+main\s+import": "from app.api import",
-            r"import\s+main": "import app.api",
-        }
-        updated_code = original_code
-        for pattern, replacement in replacements.items():
-            updated_code = re.sub(pattern, replacement, updated_code)
+        updated_code = (
+            "# [TODO] No import update instruction was provided.\n"
+            "# Please update the imports manually if needed.\n\n"
+            + original_code
+        )
     else:
         # Build prompt for the LLM
-        system_prompt = (
-            "You are a Python import statement refactoring assistant.\n"
-            "You have access to a summary of the project structure and files.\n"
-            "Your only task: rewrite ONLY the import statements according to the given instruction.\n"
-            "Keep all other code exactly as-is.\n"
-            "Return ONLY the full updated source code. Do NOT explain, comment, or add markdown."
-        )
+        messages = build_import_messages(original_code, instruction, context)
+        response = llm_client.chat(messages=messages, max_tokens=4096, temperature=0.0)
 
-        context_snippet = f"Project context (summary):\n{context or ''}\n"
-
-        user_prompt = (
-            f"{context_snippet}\n"
-            f"Original code:\n```python\n{original_code}\n```\n\n"
-            f"Instruction:\n{instruction}\n\n"
-            "Updated code:\n"
-        )
-
-        response = llm_client.chat(
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt}
-            ],
-            max_tokens=4096,
-            temperature=0.0,
-        )
 
         updated_code = re.sub(
             r"^```(?:python)?\n|```$", "", response.strip(), flags=re.MULTILINE

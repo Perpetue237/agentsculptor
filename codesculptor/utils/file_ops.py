@@ -1,7 +1,8 @@
-# utils/file_ops.py
 import os
 import shutil
 import ast
+from codesculptor.tools.dialog import DialogManager
+
 
 def read_file(path: str) -> str:
     """Read a text file and return its contents."""
@@ -9,8 +10,15 @@ def read_file(path: str) -> str:
         return f.read()
 
 
-def write_file(path: str, content: str):
-    """Write content to a file, creating directories if needed."""
+def write_file(path: str, content: str, instruction: str = ""):
+    """
+    Write content to a file, creating directories if needed.
+    If the file does not exist, ask the user for confirmation before creation.
+    """
+    if not os.path.exists(path):
+        if not DialogManager.confirm_file_creation(path, instruction):
+            print(f"[INFO] Skipping creation of {path}")
+            return
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
@@ -25,8 +33,15 @@ def backup_file(path: str, suffix=".bak") -> str:
     return backup_path
 
 
-def move_file(src: str, dst: str):
-    """Move a file, creating directories if needed."""
+def move_file(src: str, dst: str, instruction: str = ""):
+    """
+    Move a file, creating directories if needed.
+    Ask for confirmation if the destination file doesn't exist yet.
+    """
+    if not os.path.exists(dst):
+        if not DialogManager.confirm_file_creation(dst, instruction):
+            print(f"[INFO] Skipping move — destination {dst} not created.")
+            return
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     shutil.move(src, dst)
 
@@ -35,23 +50,32 @@ def delete_file(path: str):
     """Delete a file if it exists."""
     if os.path.exists(path):
         os.remove(path)
-        
-def modify_file(path: str, content: str):
-    """Modify (overwrite) an existing file's content, creating directories if needed."""
+
+
+def modify_file(path: str, content: str, instruction: str = ""):
+    """
+    Modify (overwrite) an existing file's content, creating directories if needed.
+    If the file does not exist, ask before creating it.
+    """
+    if not os.path.exists(path):
+        if not DialogManager.confirm_file_creation(path, instruction):
+            print(f"[INFO] Skipping modification — {path} not created.")
+            return
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
-        
+
+
 def analyze_file(path: str) -> dict:
     """
     Analyze a Python file to identify logical sections:
     - Counts of functions and classes
     - List of top-level functions and classes with their line numbers
-    
+
     Returns a dictionary summary.
     """
     content = read_file(path)
-    
+
     try:
         tree = ast.parse(content, filename=path)
     except SyntaxError as e:
@@ -76,5 +100,3 @@ def analyze_file(path: str) -> dict:
         "classes": classes,
     }
     return summary
-
-

@@ -1,5 +1,5 @@
 # agent/loop.py
-import os
+import os, sys
 import subprocess
 from codesculptor.utils.file_ops import write_file, move_file, backup_file, modify_file, analyze_file
 from codesculptor.tools.update_imports import update_imports
@@ -103,11 +103,16 @@ class AgentLoop:
 
     def run(self, max_iterations=3):
         for _ in range(max_iterations):
-            plan = self.planner.generate_tool_calls(
-                context=self.context,
-                user_request=self.user_request,
-                execution_log=self.execution_log
-            )
+            try:
+                plan = self.planner.generate_tool_calls(
+                    context=self.context,
+                    user_request=self.user_request,
+                    execution_log=self.execution_log
+                )
+            except RuntimeError as e:
+                print("[FATAL] Could not generate plan:", e)
+                print("Please check that vLLM is running and reachable at your VLLM_URL.")
+                sys.exit(1)
             for call in plan:
                 result = self.dispatch_tool_call(call)
                 self.execution_log.append(result)

@@ -2,6 +2,9 @@
 import os
 import re
 from codesculptor.llm.client import VLLMClient
+from codesculptor.llm.prompts import build_refactor_messages
+from codesculptor.tools.dialog import DialogManager
+
 
 
 class RefactorCodeTool:
@@ -25,6 +28,15 @@ class RefactorCodeTool:
                     files.append(part.strip())
         seen = set()
         return [f for f in files if not (f in seen or seen.add(f))]
+    
+    def _is_creation_required(self, instruction: str) -> bool:
+        """
+        Heuristic: If instruction suggests splitting, extracting,
+        or moving code, treat creation as required.
+        """
+        keywords = ["split", "extract", "move", "create new file", "separate into"]
+        return any(kw in instruction.lower() for kw in keywords)
+
 
     def refactor_file(self, project_path: str, relative_path: str, instruction: str) -> None:
         """
@@ -33,10 +45,18 @@ class RefactorCodeTool:
         """
         full_path = os.path.join(project_path, relative_path)
 
-        # Try to detect all relevant files mentioned in instruction; default to target file
+        # 1. Detect candidate files
         source_files = self._detect_source_files(instruction) or [relative_path]
 
-        # Gather original + current code from disk
+        # 2. Ask user to resolve ambiguity (new dialog step)
+        source_files = DialogManager.choose_file(source_files, instruction)
+
+        # 3. Confirm action before proceeding
+        if not DialogManager.confirm_action(source_files, instruction):
+            print("[INFO] Refactor cancelled by user.")
+            return
+
+        # 4. Gather original + current code from disk
         original_parts = []
         current_parts = []
         for src in source_files:
@@ -49,37 +69,28 @@ class RefactorCodeTool:
             else:
                 print(f"[WARN] Source file not found on disk: {src}")
 
-        # Build LLM prompt
-        messages = [
-            {
-                "role": "system",
-                "content": (
-                    "You are a code refactoring assistant.\n"
-                    "Given the original and current source code and a refactoring instruction, "
-                    "return ONLY the updated source code for the target file.\n"
-                    "Rules:\n"
-                    "- Do not modify unrelated code.\n"
-                    "- Preserve style and formatting.\n"
-                    "- Use relative imports if needed.\n"
-                    "- Return ONLY valid Python code — no comments, explanations, or markdown."
-                )
-            },
-            {
-                "role": "user",
-                "content": (
-                    f"Original versions:\n```python\n{'\n\n'.join(original_parts)}\n```\n\n"
-                    f"Current versions:\n```python\n{'\n\n'.join(current_parts)}\n```\n\n"
-                    f"Refactoring instruction:\n{instruction}\n\n"
-                    "Updated code:"
-                )
-            }
-        ]
+        # 5. Build LLM prompt
+        messages = build_refactor_messages(original_parts, current_parts, instruction)
 
-        # Send to LLM
+        # 6. Send to LLM
         response = self.llm_client.chat(messages=messages, max_tokens=4096, temperature=0)
 
-        # Clean and save the code
+        # 7. Clean and prepare code
         cleaned_code = self._clean_code_content(response) or "# Empty file after refactor\n"
+
+        # 8. Check if file exists or requires creation
+        if not os.path.exists(full_path):
+            # Ask user if we should create it
+            if not DialogManager.confirm_file_creation(full_path, instruction):
+                # Decide: skip vs fail depending on necessity
+                if self._is_creation_required(instruction):
+                    print(f"[ERROR] Cannot satisfy request — creation of {relative_path} is required.")
+                    return
+                else:
+                    print(f"[INFO] Skipping creation of {relative_path} (not essential).")
+                    return
+
+        # 9. Write the updated file
         os.makedirs(os.path.dirname(full_path), exist_ok=True)
         with open(full_path, "w", encoding="utf-8") as f:
             f.write(cleaned_code)
