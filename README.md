@@ -26,14 +26,14 @@ It uses an OpenAI-like planner–executor loop on top of a [vLLM](https://github
       - [1. vLLM Dockerfile](#1-vllm-dockerfile)
       - [2. Build \& Run vLLM](#2-build--run-vllm)
       - [3. Point Your App to vLLM](#3-point-your-app-to-vllm)
-    - [Workflow](#workflow)
-  - [🛠️ Tools Available](#️-tools-available)
+  - [Workflow](#workflow)
+    - [🛠️ Tools Available](#️-tools-available)
     - [💡 Usage Notes](#-usage-notes)
-  - [⚙️ How It Works](#️-how-it-works)
-    - [📋 Planner Agent (Reasoning Layer)](#-planner-agent-reasoning-layer)
-    - [🔁 Agent Loop (Execution Layer)](#-agent-loop-execution-layer)
-    - [🛠️ Tools (Action Layer)](#️-tools-action-layer)
-    - [♻️ Re-Planning \& Self-Healing (Future)](#️-re-planning--self-healing-future)
+    - [⚙️ How It Works](#️-how-it-works)
+      - [📋 Planner Agent (Reasoning Layer)](#-planner-agent-reasoning-layer)
+      - [🔁 Agent Loop (Execution Layer)](#-agent-loop-execution-layer)
+      - [🛠️ Tools (Action Layer)](#️-tools-action-layer)
+      - [♻️ Re-Planning \& Self-Healing (Future)](#️-re-planning--self-healing-future)
   - [🤝 Contributions](#-contributions)
     - [1. 🛠️ Setup Your Environment](#1-️-setup-your-environment)
     - [2. 🔧 Make Your Changes](#2--make-your-changes)
@@ -293,7 +293,7 @@ export VLLM_MODEL=gpt-oss-120b
 Now your devcontainer (or even your local machine) can use the vLLM API without bundling it in the same container.
 
 ---
-### Workflow
+## Workflow
 
 1. `prepare_context` scans your project files.
 2. `PlannerAgent` generates a JSON plan of tool calls.
@@ -302,7 +302,7 @@ Now your devcontainer (or even your local machine) can use the vLLM API without 
 5. Changes are applied safely (backup first).
 
 ---
-## 🛠️ Tools Available
+### 🛠️ Tools Available
 
 Each tool in **agentsculptor** has a **name, description, and parameters**. You can use these tools via the CLI or programmatically.
 
@@ -325,11 +325,11 @@ Each tool in **agentsculptor** has a **name, description, and parameters**. You 
 
 ---
 
-## ⚙️ How It Works
+### ⚙️ How It Works
 
 The agentsculptor agent runs on an OpenAI-like planner–executor loop, designed to make structured, safe, and iterative changes to your codebase.
 
-### 📋 Planner Agent (Reasoning Layer)
+#### 📋 Planner Agent (Reasoning Layer)
 
 Takes your natural language request (e.g., “merge utils.py and helpers.py into one module”).
 
@@ -348,7 +348,7 @@ Example:
 }
 ```
 
-### 🔁 Agent Loop (Execution Layer)
+#### 🔁 Agent Loop (Execution Layer)
 
 Iterates through the planned tool calls one by one.
 
@@ -356,7 +356,7 @@ Ensures dependencies are respected (e.g., backup → refactor → update imports
 
 Captures logs and errors for each step, with the ability to retry.
 
-### 🛠️ Tools (Action Layer)
+#### 🛠️ Tools (Action Layer)
 
 The agent never edits files directly. Instead, it calls specialized tools:
 
@@ -374,7 +374,7 @@ format_code → ensure style consistency with black.
 
 This makes the workflow transparent, reproducible, and debuggable.
 
-### ♻️ Re-Planning & Self-Healing (Future)
+#### ♻️ Re-Planning & Self-Healing (Future)
 
 If a step fails (e.g., tests break), the agent will be able to re-plan automatically.
 
