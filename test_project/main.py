@@ -3,5 +3,5 @@ from fastapi import FastAPI
 app = FastAPI()
 
 @app.get("/")
-def read_root():
-    return {"message": "Hello to the OpenAI community"}
+async def root():
+    return {"message": "hello to the OpenAI community"}
