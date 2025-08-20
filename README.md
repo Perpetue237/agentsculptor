@@ -18,7 +18,14 @@ It uses an OpenAI-like planner–executor loop on top of a [vLLM](https://github
   - [📦 Repository Structure](#-repository-structure)
   - [👨‍💻 Developer Guide](#-developer-guide)
     - [🟢 Option A — With DevContainer](#-option-a--with-devcontainer)
+      - [1. DevContainer](#1-devcontainer)
+      - [2. Dockerfile](#2-dockerfile)
+      - [3. Python Dependencies](#3-python-dependencies)
+      - [4. Start](#4-start)
     - [🔵 Option B — Without DevContainer (Dedicated vLLM Server)](#-option-b--without-devcontainer-dedicated-vllm-server)
+      - [1. vLLM Dockerfile](#1-vllm-dockerfile)
+      - [2. Build \& Run vLLM](#2-build--run-vllm)
+      - [3. Point Your App to vLLM](#3-point-your-app-to-vllm)
     - [Workflow](#workflow)
   - [🛠️ Tools Available](#️-tools-available)
     - [💡 Usage Notes](#-usage-notes)
@@ -153,7 +160,7 @@ Without DevContainer → Run vLLM in a dedicated container and point your app or
 
 This repository provides a VS Code DevContainer for an optimized development environment with GPU support and vLLM.
 
-1. DevContainer
+#### 1. DevContainer
 
 Create `.devcontainer/devcontainer.json`:
 
@@ -191,7 +198,7 @@ Create `.devcontainer/devcontainer.json`:
 }
 ```
 
-2. Dockerfile
+#### 2. Dockerfile
 
 `.devcontainer/Dockerfile`:
 
@@ -211,7 +218,7 @@ RUN apt-get update && apt-get install -y curl
 EXPOSE 8008
 ```
 
-3. Python Dependencies
+#### 3. Python Dependencies
 
 `requirements.txt`:
 
@@ -221,7 +228,7 @@ pytest
 commitizen
 ```
 
-4. Start
+#### 4. Start
 
 Open the project in VS Code.
 
@@ -233,7 +240,7 @@ vLLM server will launch automatically on port 8008.
 
 If you prefer to run vLLM separately (cleaner, more production-like), you can build and run a dedicated container.
 
-1. vLLM Dockerfile
+#### 1. vLLM Dockerfile
 
 Create `Dockerfile.vllm`:
 
@@ -254,8 +261,8 @@ CMD ["vllm", "serve", "openai/gpt-oss-120b", \
      "--port", "8008"]
 ```
 
-2. Build & Run vLLM
-3. 
+#### 2. Build & Run vLLM
+ 
 ```bash
 # Build
 docker build -t vllm-server -f Dockerfile.vllm .
@@ -273,7 +280,7 @@ docker run -d \
   vllm-server
   ```
 
-3. Point Your App to vLLM
+#### 3. Point Your App to vLLM
 
 Set environment variables so AgentSculptor talks to the API:
 
