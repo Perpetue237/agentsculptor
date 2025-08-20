@@ -22,7 +22,9 @@
             "innerlee.nvidia-smi",
             "Leonardo16.nvidia-gpu",
             "RSIP-Vision.nvidia-smi-plus",
-            "yzhang.markdown-all-in-one"
+            "yzhang.markdown-all-in-one",
+            "MermaidChart.vscode-mermaid-chart",
+            "Gruntfuggly.mermaid-export"
         ]
       }
     },
