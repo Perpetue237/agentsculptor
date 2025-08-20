@@ -2,10 +2,10 @@ from setuptools import setup, find_packages
 
 setup(
     name="agentsculptor",
-    version="0.1.1",
+    version="0.1.0",
     author="Perpetue237",
     author_email="youremail@example.com",
-    description="AI-powered project refactoring and testing agent using GPT-OSS and vLLM",
+    description="agentsculptor: Shape your AI agents into powerful coding assistants — powered by GPT-OSS and vLLM.",
     long_description=open("README.md", "r", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/Perpetue237/agentsculptor",
