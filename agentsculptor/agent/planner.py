@@ -1,8 +1,8 @@
 # agent/planner.py
 import json
 from typing import Any, Dict, List, Optional
-from codesculptor.llm.client import VLLMClient
-from codesculptor.llm.prompts import planner_system_prompt
+from agentsculptor.llm.client import VLLMClient
+from agentsculptor.llm.prompts import planner_system_prompt
 import os
 
 def summarize_context(context: Dict[str, Any], max_files: int = 20, max_chars_per_file: int = 10000) -> str:

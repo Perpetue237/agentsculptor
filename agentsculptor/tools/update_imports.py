@@ -1,8 +1,8 @@
 # tools/update_imports.py
 import os
 import re
-from codesculptor.llm.client import VLLMClient
-from codesculptor.llm.prompts import build_import_messages
+from agentsculptor.llm.client import VLLMClient
+from agentsculptor.llm.prompts import build_import_messages
 
 
 base_url = (None or os.environ.get("VLLM_URL", "http://localhost:8008")).rstrip("/")

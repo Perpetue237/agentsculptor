@@ -1,10 +1,10 @@
 # agent/loop.py
 import os, sys
 import subprocess
-from codesculptor.utils.file_ops import write_file, move_file, backup_file, modify_file, analyze_file
-from codesculptor.tools.update_imports import update_imports
-from codesculptor.tools.run_tests import run_tests
-from codesculptor.tools.refactor_code import RefactorCodeTool
+from agentsculptor.utils.file_ops import write_file, move_file, backup_file, modify_file, analyze_file
+from agentsculptor.tools.update_imports import update_imports
+from agentsculptor.tools.run_tests import run_tests
+from agentsculptor.tools.refactor_code import RefactorCodeTool
 
 def make_tool_functions(project_path, context, refactor_tool, analysis_cache):
     return {

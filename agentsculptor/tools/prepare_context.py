@@ -1,6 +1,6 @@
 # tools/prepare_context.py
 import os
-from codesculptor.utils.file_ops import analyze_file  # We'll use your existing analyzer
+from agentsculptor.utils.file_ops import analyze_file  # We'll use your existing analyzer
 
 def prepare_context(project_path: str, include_content=True, max_content_chars=10000):
     """

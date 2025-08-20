@@ -1,14 +1,18 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="codesculptor",
-    version="0.1.0",
+    name="agentsculptor",
+    version="0.1.1",
     author="Perpetue237",
     author_email="youremail@example.com",
-    description="AI-powered Python project refactoring and testing agent using GPT-OSS and vLLM",
+    description="AI-powered project refactoring and testing agent using GPT-OSS and vLLM",
     long_description=open("README.md", "r", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/Perpetue237/codesculptor",
+    url="https://github.com/Perpetue237/agentsculptor",
+    project_urls={
+        "Bug Tracker": "https://github.com/Perpetue237/agentsculptor/issues",
+        "Source": "https://github.com/Perpetue237/agentsculptor",
+    },
     packages=find_packages(exclude=["tests*", "test_project*", ".devcontainer*"]),
     python_requires=">=3.10",
     install_requires=[
@@ -21,14 +25,15 @@ setup(
             "pytest",
         ]
     },
+    license="Apache-2.0",   # <-- SPDX identifier
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
+        "License :: OSI Approved :: Apache Software License",
     ],
     entry_points={
         "console_scripts": [
-            'codesculptor-cli = codesculptor.main:main',  # if your main.py has a main() function
+            'agentsculptor-cli = agentsculptor.main:main',  # if your main.py has a main() function
         ],
     },
 )

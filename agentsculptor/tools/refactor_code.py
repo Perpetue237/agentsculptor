@@ -1,9 +1,9 @@
 # tools/refactor_code.py
 import os
 import re
-from codesculptor.llm.client import VLLMClient
-from codesculptor.llm.prompts import build_refactor_messages
-from codesculptor.tools.dialog import DialogManager
+from agentsculptor.llm.client import VLLMClient
+from agentsculptor.llm.prompts import build_refactor_messages
+from agentsculptor.tools.dialog import DialogManager
 
 
 

@@ -1,7 +1,7 @@
 import os
 import shutil
 import ast
-from codesculptor.tools.dialog import DialogManager
+from agentsculptor.tools.dialog import DialogManager
 
 
 def read_file(path: str) -> str:

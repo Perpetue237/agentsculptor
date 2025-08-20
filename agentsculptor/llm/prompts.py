@@ -1,6 +1,6 @@
 # llm/prompts.py
 
-from codesculptor.tools.registry import TOOL_REGISTRY, TOOL_SIGNATURES
+from agentsculptor.tools.registry import TOOL_REGISTRY, TOOL_SIGNATURES
 
 
 def format_tool_list(tool_registry):

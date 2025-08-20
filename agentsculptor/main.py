@@ -1,6 +1,6 @@
-from codesculptor.agent.planner import PlannerAgent
-from codesculptor.agent.loop import AgentLoop
-from codesculptor.tools.prepare_context import prepare_context
+from agentsculptor.agent.planner import PlannerAgent
+from agentsculptor.agent.loop import AgentLoop
+from agentsculptor.tools.prepare_context import prepare_context
 import sys
 
 
@@ -12,7 +12,7 @@ def cli_agent(project_path, user_request):
 
 def main():  # <-- wrapper for console_scripts
     if len(sys.argv) < 3:
-        print("Usage: codesculptor-cli <project_path> '<user_request>'")
+        print("Usage: agentsculptor-cli <project_path> '<user_request>'")
         sys.exit(1)
     project_path = sys.argv[1]
     user_request = sys.argv[2]

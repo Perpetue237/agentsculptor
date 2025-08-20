@@ -12,3 +12,4 @@ venv/
 build/
 dist/
 *.egg-info/
+build.sh
