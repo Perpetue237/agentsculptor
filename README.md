@@ -486,4 +486,4 @@ Once approved and merged, your contribution becomes part of agentsculptor!
 
 ## 📄 License
 
-MIT License. See [LICENSE](LICENSE) for details.
+Apache License. See [LICENSE](LICENSE) for details.
