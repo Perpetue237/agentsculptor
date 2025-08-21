@@ -158,60 +158,57 @@ This repository provides a `.devcontainer` folder for an optimized development e
 #### 1. DevContainer
 
 Create `.devcontainer/devcontainer.json`:
-
-```json
-{
-    "name": "agentsculptor",
-    "build": {
-      "dockerfile": "Dockerfile"
-    },
-    "features": {},
-    "containerEnv": {
-      "PYTHONUNBUFFERED": "1"
-    },
-    "customizations": {
-      "vscode": {
-        "extensions": [
-            "ms-python.python",
-            "ms-toolsai.jupyter",
-            "innerlee.nvidia-smi",
-            "Leonardo16.nvidia-gpu",
-            "RSIP-Vision.nvidia-smi-plus",
-            "yzhang.markdown-all-in-one",
-            "MermaidChart.vscode-mermaid-chart",
-            "Gruntfuggly.mermaid-export"
-        ]
+  ```json
+  {
+      "name": "agentsculptor",
+      "build": {
+        "dockerfile": "Dockerfile"
+      },
+      "features": {},
+      "containerEnv": {
+        "PYTHONUNBUFFERED": "1"
+      },
+      "customizations": {
+        "vscode": {
+          "extensions": [
+              "ms-python.python",
+              "ms-toolsai.jupyter",
+              "innerlee.nvidia-smi",
+              "Leonardo16.nvidia-gpu",
+              "RSIP-Vision.nvidia-smi-plus",
+              "yzhang.markdown-all-in-one",
+              "MermaidChart.vscode-mermaid-chart",
+              "Gruntfuggly.mermaid-export"
+          ]
+        }
       }
     }
-  }
-```
+  ```
 
 #### 2. Dockerfile
 
 `.devcontainer/Dockerfile`:
+  ```bash
+  FROM python:3.12-slim
 
-```bash
-FROM python:3.12-slim
+  ENV DEBIAN_FRONTEND=noninteractive
+  ENV TZ=Europe/Berlin
 
-ENV DEBIAN_FRONTEND=noninteractive
-ENV TZ=Europe/Berlin
+  COPY . .
 
-COPY . .
-
-RUN apt-get update && apt-get install -y curl git && rm -rf /var/lib/apt/lists/*
-RUN pip3 install --no-cache-dir -r requirements.txt
-```
+  RUN apt-get update && apt-get install -y curl git && rm -rf /var/lib/apt/lists/*
+  RUN pip3 install --no-cache-dir -r requirements.txt
+  ```
 
 #### 3. Python Dependencies
 
 `requirements.txt`:
-
-```
-black
-pytest
-commitizen
-requests
-```
+  ```
+  black
+  pytest
+  commitizen
+  requests
+  ```
 
 #### 4. Start
 
@@ -220,7 +217,6 @@ requests
 2. Click Reopen in Container.
 
 3. Make sure the vLLM server is running and the environment variables are set:
-
   ```bash
   export VLLM_URL=http://localhost:8008/v1
   export VLLM_MODEL=openai/gpt-oss-120b
