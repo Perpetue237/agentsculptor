@@ -1,22 +1,9 @@
-FROM vllm/vllm-openai:gptoss
+FROM python:3.12-slim
 
-ENV USERNAME="$USERNAME"
-ARG DEBIAN_FRONTEND=noninteractive
-ENV TZ Europe/Berlin
-
-ENV VLLM_ATTENTION_BACKEND=TRITON_ATTN_VLLM_V1
-
-RUN echo $USERNAME
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Europe/Berlin
 
 COPY . .
 
-RUN  pip3 --no-cache-dir install -r requirements.txt 
-
-RUN apt-get update && apt-get install -y curl
-
-EXPOSE 8008
-
-
-
-
-
+RUN apt-get update && apt-get install -y curl git && rm -rf /var/lib/apt/lists/*
+RUN pip3 install --no-cache-dir -r requirements.txt

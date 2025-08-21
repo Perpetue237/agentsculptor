@@ -1,0 +1,27 @@
+services:
+  vllm:
+    image: vllm/vllm-openai:gptoss
+    container_name: vllm-server
+    command: >
+      --model openai/gpt-oss-120b
+      --gpu-memory-utilization 0.95
+      --tensor-parallel-size 2
+      --download-dir /raid/vllm
+      --port 8008
+    shm_size: "64gb"
+    ulimits:
+      memlock: -1
+      stack: 67108864
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["5,6"]
+              capabilities: [gpu]
+    volumes:
+      - /raid/vllm:/raid/vllm
+    ports:
+      - "8008:8008"
+    environment:
+      VLLM_ATTENTION_BACKEND: TRITON_ATTN_VLLM_V1

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="agentsculptor",
-    version="0.1.0",
+    version="0.1.2",
     author="Perpetue237",
     author_email="youremail@example.com",
     description="agentsculptor: Shape your AI agents into powerful coding assistants — powered by GPT-OSS and vLLM.",

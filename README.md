@@ -17,15 +17,12 @@ It uses an OpenAI-like planner–executor loop on top of a [vLLM](https://github
   - [🚀 Features](#-features)
   - [📦 Repository Structure](#-repository-structure)
   - [👨‍💻 Developer Guide](#-developer-guide)
-    - [🟢 Option A — With DevContainer](#-option-a--with-devcontainer)
+    - [🟢 Option A — Development in VS Code DevContainer](#-option-a--development-in-vs-code-devcontainer)
       - [1. DevContainer](#1-devcontainer)
       - [2. Dockerfile](#2-dockerfile)
       - [3. Python Dependencies](#3-python-dependencies)
       - [4. Start](#4-start)
-    - [🔵 Option B — Without DevContainer (Dedicated vLLM Server)](#-option-b--without-devcontainer-dedicated-vllm-server)
-      - [1. vLLM Dockerfile](#1-vllm-dockerfile)
-      - [2. Build \& Run vLLM](#2-build--run-vllm)
-      - [3. Point Your App to vLLM](#3-point-your-app-to-vllm)
+    - [🔵 Option B — Without DevContainer (Dedicated virtual environment)](#-option-b--without-devcontainer-dedicated-virtual-environment)
   - [Workflow](#workflow)
     - [🛠️ Tools Available](#️-tools-available)
     - [💡 Usage Notes](#-usage-notes)
@@ -150,15 +147,13 @@ This will:
 
 ## 👨‍💻 Developer Guide
 
-This repository supports two workflows:
+This repository supports development using VS Code DevContainers.
 
-With DevContainer → Develop inside VS Code’s DevContainer, vLLM runs in the same container.
+> **Note**: The vLLM server is run separately. Make sure it is running at VLLM_URL and serving VLLM_MODEL. See /vllm-server-config/README.md for instructions on running the vLLM server.
 
-Without DevContainer → Run vLLM in a dedicated container and point your app or CLI at it.
+### 🟢 Option A — Development in VS Code DevContainer
 
-### 🟢 Option A — With DevContainer
-
-This repository provides a VS Code DevContainer for an optimized development environment with GPU support and vLLM.
+This repository provides a `.devcontainer` folder for an optimized development environment with docker.
 
 #### 1. DevContainer
 
@@ -166,36 +161,29 @@ Create `.devcontainer/devcontainer.json`:
 
 ```json
 {
-  "name": "gpt-oss-120b-vllm",
-  "build": {
-    "dockerfile": "Dockerfile"
-  },
-  "runArgs": [
-    "--gpus", "\"device=5,6\"",
-    "--shm-size=64gb",
-    "--ulimit", "memlock=-1",
-    "--ulimit", "stack=67108864",
-    "--ipc=host"
-  ],
-  "containerEnv": {
-    "PYTHONUNBUFFERED": "1"
-  },
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "ms-python.python",
-        "ms-toolsai.jupyter",
-        "innerlee.nvidia-smi",
-        "Leonardo16.nvidia-gpu",
-        "RSIP-Vision.nvidia-smi-plus"
-      ]
+    "name": "agentsculptor",
+    "build": {
+      "dockerfile": "Dockerfile"
+    },
+    "features": {},
+    "containerEnv": {
+      "PYTHONUNBUFFERED": "1"
+    },
+    "customizations": {
+      "vscode": {
+        "extensions": [
+            "ms-python.python",
+            "ms-toolsai.jupyter",
+            "innerlee.nvidia-smi",
+            "Leonardo16.nvidia-gpu",
+            "RSIP-Vision.nvidia-smi-plus",
+            "yzhang.markdown-all-in-one",
+            "MermaidChart.vscode-mermaid-chart",
+            "Gruntfuggly.mermaid-export"
+        ]
+      }
     }
-  },
-  "mounts": [
-    "source=/raid/vllm,target=/app/vllm,type=bind,consistency=cached" 
-  ],
-  "postStartCommand": "vllm serve openai/gpt-oss-120b --gpu-memory-utilization 0.95 --tensor-parallel-size 2 --download-dir /app/vllm --port 8008"
-}
+  }
 ```
 
 #### 2. Dockerfile
@@ -203,19 +191,15 @@ Create `.devcontainer/devcontainer.json`:
 `.devcontainer/Dockerfile`:
 
 ```bash
-FROM vllm/vllm-openai:gptoss
+FROM python:3.12-slim
 
-ENV USERNAME="$USERNAME"
-ARG DEBIAN_FRONTEND=noninteractive
-ENV TZ Europe/Berlin
-ENV VLLM_ATTENTION_BACKEND=TRITON_ATTN_VLLM_V1
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Europe/Berlin
 
 COPY . .
 
-RUN pip3 --no-cache-dir install -r requirements.txt
-RUN apt-get update && apt-get install -y curl
-
-EXPOSE 8008
+RUN apt-get update && apt-get install -y curl git && rm -rf /var/lib/apt/lists/*
+RUN pip3 install --no-cache-dir -r requirements.txt
 ```
 
 #### 3. Python Dependencies
@@ -226,71 +210,30 @@ EXPOSE 8008
 black
 pytest
 commitizen
+requests
 ```
 
 #### 4. Start
 
-Open the project in VS Code.
+1. Open the project in VS Code.
 
-Click Reopen in Container.
+2. Click Reopen in Container.
 
-vLLM server will launch automatically on port 8008.
+3. Make sure the vLLM server is running and the environment variables are set:
 
-### 🔵 Option B — Without DevContainer (Dedicated vLLM Server)
-
-If you prefer to run vLLM separately (cleaner, more production-like), you can build and run a dedicated container.
-
-#### 1. vLLM Dockerfile
-
-Create `Dockerfile.vllm`:
-
-```bash
-FROM vllm/vllm-openai:gptoss
-
-ENV VLLM_ATTENTION_BACKEND=TRITON_ATTN_VLLM_V1
-ENV PYTHONUNBUFFERED=1
-
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
-
-EXPOSE 8008
-
-CMD ["vllm", "serve", "openai/gpt-oss-120b", \
-     "--gpu-memory-utilization", "0.95", \
-     "--tensor-parallel-size", "2", \
-     "--download-dir", "/app/vllm", \
-     "--port", "8008"]
-```
-
-#### 2. Build & Run vLLM
- 
-```bash
-# Build
-docker build -t vllm-server -f Dockerfile.vllm .
-
-# Run with GPU support
-docker run -d \
-  --name vllm \
-  --gpus '"device=5,6"' \
-  --shm-size=64gb \
-  --ulimit memlock=-1 \
-  --ulimit stack=67108864 \
-  --ipc=host \
-  -p 8008:8008 \
-  -v /raid/vllm:/app/vllm \
-  vllm-server
+  ```bash
+  export VLLM_URL=http://localhost:8008/v1
+  export VLLM_MODEL=openai/gpt-oss-120b
   ```
+4. Intall agentsculptor
+   ```bash
+   pip install -e .
+   ```
 
-#### 3. Point Your App to vLLM
+now you can use the `agentsculptor-cl`.
 
-Set environment variables so AgentSculptor talks to the API:
+### 🔵 Option B — Without DevContainer (Dedicated virtual environment)
 
-```bash
-export VLLM_URL=http://localhost:8008/v1
-export VLLM_MODEL=gpt-oss-120b
-```
-
-
-Now your devcontainer (or even your local machine) can use the vLLM API without bundling it in the same container.
 
 ---
 ## Workflow
