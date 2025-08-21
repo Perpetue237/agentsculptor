@@ -217,14 +217,14 @@ Create `.devcontainer/devcontainer.json`:
 2. Click Reopen in Container.
 
 3. Make sure the vLLM server is running and the environment variables are set:
-  ```bash
-  export VLLM_URL=http://localhost:8008/v1
-  export VLLM_MODEL=openai/gpt-oss-120b
-  ```
+    ```bash
+    export VLLM_URL=http://localhost:8008/v1
+    export VLLM_MODEL=openai/gpt-oss-120b
+    ```
 4. Intall agentsculptor
-   ```bash
-   pip install -e .
-   ```
+    ```bash
+    pip install -e .
+    ```
 
 now you can use the `agentsculptor-cl`.
 
