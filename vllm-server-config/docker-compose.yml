@@ -8,6 +8,7 @@ services:
       --tensor-parallel-size 2
       --download-dir /raid/vllm
       --port 8008
+      --no-enable-prefix-caching
     shm_size: "64gb"
     ulimits:
       memlock: -1

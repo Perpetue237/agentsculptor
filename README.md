@@ -3,6 +3,57 @@
 **agentsculptor** is an experimental AI-powered development agent designed to **analyze, refactor, and extend Python projects automatically**.
 It uses an OpenAI-like planner–executor loop on top of a [vLLM](https://github.com/vllm-project/vllm) backend, combining project context analysis, structured tool calls, and iterative refinement.
 
+``` mermaid
+flowchart TD
+    %% === NODES ===
+    A([💬 User Request])
+    B([🧠 Planner Agent])
+    C([🔁 Agent Loop])
+    D{{🛠️ Tools}}
+
+    %% Tools
+    D1([🧪 Run Tests])       
+    %% Stadium shape
+    D2([📄 File Creation])
+    D3([🖋️ Refactor Code])
+    D4([🔗 Update Imports])
+    D5([🎨 Format Code])
+    D6[/💾 Backup/]          
+    %% Parallelogram
+
+    E([🏆 Success])
+
+    %% === EDGES ===
+    A --> B -->|Generates JSON Plan| C --> D
+    D -->|run_tests| D1
+    D <-->|create_file| D2
+    D <-->|refactor_code| D3
+    D <-->|update_imports| D4
+    D <-->|format_code| D5
+    D -->|backup_file| D6
+
+    D1 -->|❌ Tests Fail| B
+    D1 -->|✅ Tests Pass| E
+
+    %% === STYLES (softer colors) ===
+    style A fill:#BBDEFB,stroke:#64B5F6,color:#0D47A1
+    style B fill:#E1BEE7,stroke:#BA68C8,color:#4A148C
+    style C fill:#FFE0B2,stroke:#FFB74D,color:#E65100
+    style D fill:#CFD8DC,stroke:#90A4AE,color:#263238
+
+    %% Normal tools - soft blue
+    style D2 fill:#B3E5FC,stroke:#4FC3F7,color:#01579B
+    style D3 fill:#B3E5FC,stroke:#4FC3F7,color:#01579B
+    style D4 fill:#B3E5FC,stroke:#4FC3F7,color:#01579B
+    style D5 fill:#B3E5FC,stroke:#4FC3F7,color:#01579B
+
+    %% Special tools
+    style D1 fill:#C8E6C9,stroke:#81C784,color:#1B5E20   
+    style D6 fill:#FFCCBC,stroke:#FF8A65,color:#BF360C   
+
+    style E fill:#C5E1A5,stroke:#AED581,color:#33691E
+```
+
 ---
 ## Table of Content
 - [agentsculptor](#agentsculptor)
@@ -218,8 +269,8 @@ Create `.devcontainer/devcontainer.json`:
 
 3. Make sure the vLLM server is running and the environment variables are set:
     ```bash
-    export VLLM_URL=http://localhost:8008/v1
-    export VLLM_MODEL=openai/gpt-oss-120b
+    export VLLM_URL=http://localhost:8008
+    
     ```
 4. Intall agentsculptor
     ```bash
