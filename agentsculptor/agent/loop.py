@@ -1,77 +1,86 @@
 # agent/loop.py
-import os, sys
+import os
+import sys
 import subprocess
-from agentsculptor.utils.file_ops import write_file, move_file, backup_file, modify_file, analyze_file
+from agentsculptor.utils.file_ops import write_file, backup_file
 from agentsculptor.tools.update_imports import update_imports
 from agentsculptor.tools.run_tests import run_tests
 from agentsculptor.tools.refactor_code import RefactorCodeTool
 
+
+def safe_tool(func):
+    """Decorator to make any tool return structured results with error handling."""
+    def wrapper(*args, **kwargs):
+        try:
+            result = func(*args, **kwargs)
+            return {"status": "success", "result": result}
+        except Exception as e:
+            return {"status": "error", "error": str(e)}
+    return wrapper
+
+
 def make_tool_functions(project_path, context, refactor_tool, analysis_cache):
     return {
-        "create_file": lambda path, content: write_file(os.path.join(project_path, path), content),
-
-        #"modify_file": lambda path, content: modify_file(os.path.join(project_path, path), content),
-
-        "backup_file": lambda path: (
-            backup_file(os.path.join(project_path, path))
-            if os.path.exists(os.path.join(project_path, path))
-            else print(f"[WARN] File {path} not found — skipping backup.")
+        "create_file": safe_tool(
+            lambda path, content: write_file(os.path.join(project_path, path), content)
         ),
 
-        #"move_file": lambda path, destination: move_file(project_path, path, destination),
-
-        "update_imports": lambda path, instruction: update_imports(
-            project_path, path, instruction, context=context
+        "backup_file": safe_tool(
+            lambda path: backup_file(os.path.join(project_path, path))
         ),
 
-        "run_tests": lambda: run_tests(project_path),
+        "update_imports": safe_tool(
+            lambda path, instruction: update_imports(project_path, path, instruction, context=context)
+        ),
 
-        "format_code": lambda path=None: subprocess.run(["black", project_path], check=True),
+        "run_tests": safe_tool(
+            lambda: run_tests(project_path)
+        ),
 
-        "refactor_code": lambda path, instruction: refactor_tool.refactor_file(
-            project_path,
-            path,
-            instruction + (
-                "\n\n[FILE STRUCTURE ANALYSIS]\n"
-                f"Lines: {analysis_cache[path]['num_lines']}, "
-                f"Functions: {analysis_cache[path]['num_functions']}, "
-                f"Classes: {analysis_cache[path]['num_classes']}\n"
-                "Functions:\n" + "\n".join(
-                    f"- {f['name']} (line {f['lineno']})" for f in analysis_cache[path]["functions"]
-                ) + "\n"
-                "Classes:\n" + "\n".join(
-                    f"- {c['name']} (line {c['lineno']})" for c in analysis_cache[path]["classes"]
+        "format_code": safe_tool(
+            lambda path=None: subprocess.run(["black", project_path], check=True)
+        ),
+
+        "refactor_code": safe_tool(
+            lambda path, instruction: refactor_tool.refactor_file(
+                project_path,
+                path,
+                instruction + (
+                    "\n\n[FILE STRUCTURE ANALYSIS]\n"
+                    f"Lines: {analysis_cache.get(path, {}).get('num_lines', 0)}, "
+                    f"Functions: {analysis_cache.get(path, {}).get('num_functions', 0)}, "
+                    f"Classes: {analysis_cache.get(path, {}).get('num_classes', 0)}\n"
                 )
-                if path in analysis_cache else ""
             )
         ),
-
-        #"commit_changes": lambda description="Automated commit": (
-           # subprocess.run(["git", "add", "."], cwd=project_path),
-           # subprocess.run(["git", "commit", "-m", description], cwd=project_path)
-        #),
     }
 
+
 def dispatch_tool_call(tool_functions, step):
-    tool = step["action"]
-    args = {k: v for k, v in step.items() if k != "action"}
+    tool = step.get("action") or step.get("tool")
+    args = step.get("args", {}) 
+
+    if tool == "noop":
+        return {"tool": "noop", "status": "noop", "args": args, "result": args.get("reason", "No-op")}
     func = tool_functions.get(tool)
+
     if not func:
-        print(f"[WARN] Unknown action: {tool}")
-        return
-    try:
-        func(**args)
-        print(f"[INFO] Executed {tool} with args: {args}")
-    except Exception as e:
-        print(f"[ERROR] Failed to execute {tool}: {e}")
+        return {"tool": tool, "status": "error", "args": args, "error": "Unknown tool"}
+
+    result = func(**args)
+    return {"tool": tool, **result, "args": args}
+
 
 def run_loop(project_path, context, plan):
     refactor_tool = RefactorCodeTool()
-    analysis_cache = {}  # You can populate this if needed
+    analysis_cache = {}
     tool_functions = make_tool_functions(project_path, context, refactor_tool, analysis_cache)
 
     for step in plan:
-        dispatch_tool_call(tool_functions, step)
+        result = dispatch_tool_call(tool_functions, step)
+        status = result["status"].upper()
+        print(f"[{status}] {result['tool']} → {result.get('error', '') or 'ok'}")
+
 
 class AgentLoop:
     def __init__(self, planner, context, user_request, project_path):
@@ -86,20 +95,13 @@ class AgentLoop:
             project_path=self.project_path,
             context=self.context,
             refactor_tool=self.refactor_tool,
-            analysis_cache=self.analysis_cache
+            analysis_cache=self.analysis_cache,
         )
 
     def dispatch_tool_call(self, call):
-        tool = call["tool"]
-        args = call.get("args", {})
-        func = self.tool_functions.get(tool)
-        if not func:
-            return {"tool": tool, "status": "error", "error": "Unknown tool"}
-        try:
-            func(**args)
-            return {"tool": tool, "status": "success", "args": args}
-        except Exception as e:
-            return {"tool": tool, "status": "error", "args": args, "error": str(e)}
+        result = dispatch_tool_call(self.tool_functions, call)
+        self.execution_log.append(result)
+        return result
 
     def run(self, max_iterations=3):
         for iteration in range(max_iterations):
@@ -109,7 +111,7 @@ class AgentLoop:
                 plan = self.planner.generate_tool_calls(
                     context=self.context,
                     user_request=self.user_request,
-                    execution_log=self.execution_log
+                    execution_log=self.execution_log,
                 )
             except RuntimeError as e:
                 print("[FATAL] Could not generate plan:", e)
@@ -122,13 +124,19 @@ class AgentLoop:
 
             all_success = True
             for call in plan:
+                tool = call.get("tool")
+                args = call.get("args", {})
+
+                if tool == "noop":
+                    print(f"[NOOP] {args.get('reason', 'Planner decided no action is possible.')}")
+                    # stop iterating further
+                    return
                 result = self.dispatch_tool_call(call)
-                self.execution_log.append(result)
-                print(f"[{result['status'].upper()}] {result['tool']} → {result.get('error', '')}")
+                status = result["status"].upper()
+                print(f"[{status}] {result['tool']} → {result.get('error', '') or 'ok'}")
                 if result["status"] != "success":
                     all_success = False
 
-            # Early stop if everything in this plan succeeded
             if all_success:
                 print("[STOP] All actions succeeded, stopping early.")
                 break

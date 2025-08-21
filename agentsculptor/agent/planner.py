@@ -137,4 +137,8 @@ class PlannerAgent:
         json_snippet = _extract_json_from_text(response)
         if not json_snippet:
             raise ValueError(f"No JSON could be extracted:\n{response}")
-        return json.loads(json_snippet)
+        plan = json.loads(json_snippet)
+
+        if not plan:  # empty list case
+            return [{"tool": "noop", "args": {"reason": "Planner returned no actions."}}]
+        return plan
