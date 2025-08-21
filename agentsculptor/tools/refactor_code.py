@@ -5,7 +5,10 @@ from agentsculptor.llm.client import VLLMClient
 from agentsculptor.llm.prompts import build_refactor_messages
 from agentsculptor.tools.dialog import DialogManager
 
+from agentsculptor.utils.logging import setup_logging, get_logger
 
+setup_logging("DEBUG")
+logger = get_logger()
 
 class RefactorCodeTool:
     def __init__(self, base_url=None, model=None):
@@ -45,7 +48,6 @@ class RefactorCodeTool:
 
 
     def refactor_file(self, project_path: str, relative_path: str, instruction: str) -> None:
-        print(relative_path, instruction)
         """
         Load the latest version of the file(s) from disk and send to the LLM
         along with the refactoring instruction. Save the updated code back to disk.
@@ -60,7 +62,7 @@ class RefactorCodeTool:
 
         # 3. Confirm action before proceeding
         if not DialogManager.confirm_action(source_files, instruction):
-            print("[INFO] Refactor cancelled by user.")
+            logger.info("[INFO] Refactor cancelled by user.")
             return
 
         # 4. Gather original + current code from disk
@@ -74,7 +76,7 @@ class RefactorCodeTool:
                 original_parts.append(f"# {src}\n{code}")
                 current_parts.append(f"# {src}\n{code}")
             else:
-                print(f"[WARN] Source file not found on disk: {src}")
+                logger.debug(f"[DEBUG] Source file not found on disk: {src}")
 
         # 5. Build LLM prompt
         messages = build_refactor_messages(original_parts, current_parts, instruction)
@@ -91,10 +93,10 @@ class RefactorCodeTool:
             if not DialogManager.confirm_file_creation(full_path, instruction):
                 # Decide: skip vs fail depending on necessity
                 if self._is_creation_required(instruction):
-                    print(f"[ERROR] Cannot satisfy request — creation of {relative_path} is required.")
+                    logger.error(f"[ERROR] Cannot satisfy request — creation of {relative_path} is required.")
                     return
                 else:
-                    print(f"[INFO] Skipping creation of {relative_path} (not essential).")
+                    logger.info(f"[INFO] Skipping creation of {relative_path} (not essential).")
                     return
 
         # 9. Write the updated file
@@ -102,4 +104,4 @@ class RefactorCodeTool:
         with open(full_path, "w", encoding="utf-8") as f:
             f.write(cleaned_code)
 
-        print(f"[INFO] Refactored file {relative_path} according to instruction.")
+        logger.info(f"[INFO] Refactored file {relative_path} according to instruction.")

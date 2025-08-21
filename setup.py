@@ -18,6 +18,7 @@ setup(
     install_requires=[
         "black",
         "pytest",
+        "colorlog",
         # add more runtime dependencies here
     ],
     extras_require={

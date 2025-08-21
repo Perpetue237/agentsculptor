@@ -6,6 +6,10 @@ from agentsculptor.utils.file_ops import write_file, backup_file
 from agentsculptor.tools.update_imports import update_imports
 from agentsculptor.tools.run_tests import run_tests
 from agentsculptor.tools.refactor_code import RefactorCodeTool
+from agentsculptor.utils.logging import setup_logging, get_logger
+
+setup_logging(level="DEBUG")
+logger = get_logger()
 
 
 def safe_tool(func):
@@ -105,7 +109,7 @@ class AgentLoop:
 
     def run(self, max_iterations=3):
         for iteration in range(max_iterations):
-            print(f"\n[ITERATION {iteration+1}] Planning...")
+            logger.iteration(iteration+1, "Planning...")
 
             try:
                 plan = self.planner.generate_tool_calls(
@@ -114,12 +118,12 @@ class AgentLoop:
                     execution_log=self.execution_log,
                 )
             except RuntimeError as e:
-                print("[FATAL] Could not generate plan:", e)
+                logger.fatal("Could not generate plan:", e)
                 print("Please check that vLLM is running and reachable at your VLLM_URL.")
                 sys.exit(1)
 
             if not plan:
-                print("[STOP] Planner returned no further actions. Exiting early.")
+                logger.stop("Planner returned no further actions. Exiting early.")
                 break
 
             all_success = True
@@ -128,7 +132,7 @@ class AgentLoop:
                 args = call.get("args", {})
 
                 if tool == "noop":
-                    print(f"[NOOP] {args.get('reason', 'Planner decided no action is possible.')}")
+                    logger.noop(f"{args.get('reason', 'Planner decided no action is possible.')}")
                     # stop iterating further
                     return
                 result = self.dispatch_tool_call(call)
@@ -138,5 +142,5 @@ class AgentLoop:
                     all_success = False
 
             if all_success:
-                print("[STOP] All actions succeeded, stopping early.")
+                logger.stop("All actions succeeded, stopping early.")
                 break

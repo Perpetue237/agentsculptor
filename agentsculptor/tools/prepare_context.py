@@ -1,6 +1,10 @@
 # tools/prepare_context.py
 import os
 from agentsculptor.utils.file_ops import analyze_file  # We'll use your existing analyzer
+from agentsculptor.utils.logging import setup_logging, get_logger
+
+setup_logging("DEBUG")
+logger = get_logger()
 
 def prepare_context(project_path: str, include_content=True, max_content_chars=10000):
     """
@@ -33,7 +37,7 @@ def prepare_context(project_path: str, include_content=True, max_content_chars=1
                     # Use the analyzer to get functions, classes, imports, etc.
                     analysis = analyze_file(file_path)
                 except Exception as e:
-                    print(f"[WARN] Could not analyze {rel_path}: {e}")
+                    logger.debug(f"[DEBUG] Could not analyze {rel_path}: {e}")
                     continue
 
                 file_info.update({
@@ -55,7 +59,7 @@ def prepare_context(project_path: str, include_content=True, max_content_chars=1
                             source = f.read()
                         file_info["content"] = source[:max_content_chars]
                     except UnicodeDecodeError:
-                        print(f"[WARN] Could not read content of {rel_path} (non-UTF8).")
+                        logger.debug(f"[DEBUG] Could not read content of {rel_path} (non-UTF8).")
 
             else:
                 # For non-Python files, store limited text content for certain types
@@ -67,7 +71,7 @@ def prepare_context(project_path: str, include_content=True, max_content_chars=1
                             content = f.read()
                         file_info["content"] = content[:max_content_chars]
                     except UnicodeDecodeError:
-                        print(f"[WARN] Could not read content of {rel_path} (non-UTF8).")
+                        logger.debug(f"[DEBUG] Could not read content of {rel_path} (non-UTF8).")
 
             context["files"][rel_path] = file_info
 

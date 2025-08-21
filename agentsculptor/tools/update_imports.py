@@ -4,6 +4,11 @@ import re
 from agentsculptor.llm.client import VLLMClient
 from agentsculptor.llm.prompts import build_import_messages
 
+from agentsculptor.utils.logging import setup_logging, get_logger
+
+setup_logging("DEBUG")
+logger = get_logger()
+
 
 base_url = (None or os.environ.get("VLLM_URL", "http://localhost:8008")).rstrip("/")
 model = None or os.environ.get("VLLM_MODEL", "openai/gpt-oss-120b")
@@ -19,7 +24,7 @@ def update_imports(project_path: str, relative_path: str, instruction: str = Non
     full_path = os.path.join(project_path, relative_path)
 
     if not os.path.exists(full_path):
-        print(f"[WARN] Path {relative_path} not found for import update.")
+        logger.debug(f"[WARN] Path {relative_path} not found for import update.")
         return
 
     # Folder mode — process recursively
@@ -51,10 +56,10 @@ def update_imports(project_path: str, relative_path: str, instruction: str = Non
         ).strip()
 
         if not updated_code:
-            print("[WARN] LLM returned empty update for imports, falling back to original code.")
+            logger.debug("[WARN] LLM returned empty update for imports, falling back to original code.")
             updated_code = original_code
 
     with open(full_path, "w", encoding="utf-8") as f:
         f.write(updated_code)
 
-    print(f"[INFO] Updated imports in {relative_path}")
+    logger.info(f"[INFO] Updated imports in {relative_path}")

@@ -2,3 +2,4 @@ black
 pytest
 commitizen
 requests
+colorlog

@@ -1,4 +1,8 @@
 import requests
+from agentsculptor.utils.logging import setup_logging, get_logger
+
+setup_logging("DEBUG")
+logger = get_logger()
 
 
 class VLLMClient:
@@ -16,7 +20,7 @@ class VLLMClient:
         }
         headers = {"Content-Type": "application/json"}
 
-        print("\n[DEBUG] Sending chat request to:", url)
+        logger.debug(f"[DEBUG] Sending chat request to: {url}")
 
         try:
             response = requests.post(url, json=payload, headers=headers, timeout=100)
@@ -50,7 +54,7 @@ class VLLMClient:
         }
         headers = {"Content-Type": "application/json"}
 
-        print("\n[DEBUG] Sending completion request to:", url)
+        logger.debug("[DEBUG] Sending completion request to:", url)
 
         try:
             response = requests.post(url, json=payload, headers=headers, timeout=100)
@@ -85,10 +89,10 @@ if __name__ == "__main__":
         ])
         print("Chat response:", output)
     except RuntimeError as e:
-        print("[FATAL] Chat failed:", e)
+        logger.fatal("Chat failed:", e)
 
     try:
         legacy_output = client.complete("The capital of France is")
         print("Completion response:", legacy_output)
     except RuntimeError as e:
-        print("[FATAL] Completion failed:", e)
+        logger.fatal("Completion failed:", e)
