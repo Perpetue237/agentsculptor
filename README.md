@@ -82,6 +82,7 @@ flowchart TD
       - [🔁 Agent Loop (Execution Layer)](#-agent-loop-execution-layer)
       - [🛠️ Tools (Action Layer)](#️-tools-action-layer)
       - [♻️ Re-Planning \& Self-Healing (Future)](#️-re-planning--self-healing-future)
+  - [🚀 Roadmap](#-roadmap)
   - [🤝 Contributions](#-contributions)
     - [1. 🛠️ Setup Your Environment](#1-️-setup-your-environment)
     - [2. 🔧 Make Your Changes](#2--make-your-changes)
@@ -424,6 +425,19 @@ The loop can feed test results or error logs back into the Planner Agent, genera
 This section emphasizes the structured loop, safety-first approach, and extensibility of your agent.
 
 ---
+
+## 🚀 Roadmap  
+
+Here’s what’s next for **AgentSculptor**:  
+
+- [ ] **Vector store DB integration** → persistent context & memory across sessions  
+- [ ] **More refactoring tools** → auto-docstring generation, linting, style normalization  
+- [ ] **Framework templates** → easy scaffolding for Flask, Django, Streamlit, etc.  
+- [ ] **Interactive mode** → iterative refinement with conversational feedback  
+- [ ] **Multi-agent workflows** → planner + executor agents collaborating on complex tasks  
+- [ ] **VS Code extension** → invoke AgentSculptor directly from your editor  
+
+
 
 ## 🤝 Contributions
 

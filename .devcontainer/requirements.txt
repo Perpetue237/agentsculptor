@@ -3,3 +3,5 @@ pytest
 commitizen
 requests
 colorlog
+twine
+build
