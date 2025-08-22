@@ -319,6 +319,57 @@ Each tool in **agentsculptor** has a **name, description, and parameters**. You 
 
 The agentsculptor agent runs on an OpenAI-like planner–executor loop, designed to make structured, safe, and iterative changes to your codebase.
 
+``` mermaid
+flowchart TD
+    %% === NODES ===
+    A([💬 User Request])
+    B([🧠 Planner Agent])
+    C([🔁 Agent Loop])
+    D{{🛠️ Tools}}
+
+    %% Tools
+    D1([🧪 Run Tests])       
+    %% Stadium shape
+    D2([📄 File Creation])
+    D3([🖋️ Refactor Code])
+    D4([🔗 Update Imports])
+    D5([🎨 Format Code])
+    D6[/💾 Backup/]          
+    %% Parallelogram
+
+    E([🏆 Success])
+
+    %% === EDGES ===
+    A --> B -->|Generates JSON Plan| C --> D
+    D -->|run_tests| D1
+    D <-->|create_file| D2
+    D <-->|refactor_code| D3
+    D <-->|update_imports| D4
+    D <-->|format_code| D5
+    D -->|backup_file| D6
+
+    D1 -->|❌ Tests Fail| B
+    D1 -->|✅ Tests Pass| E
+
+    %% === STYLES (softer colors) ===
+    style A fill:#BBDEFB,stroke:#64B5F6,color:#0D47A1
+    style B fill:#E1BEE7,stroke:#BA68C8,color:#4A148C
+    style C fill:#FFE0B2,stroke:#FFB74D,color:#E65100
+    style D fill:#CFD8DC,stroke:#90A4AE,color:#263238
+
+    %% Normal tools - soft blue
+    style D2 fill:#B3E5FC,stroke:#4FC3F7,color:#01579B
+    style D3 fill:#B3E5FC,stroke:#4FC3F7,color:#01579B
+    style D4 fill:#B3E5FC,stroke:#4FC3F7,color:#01579B
+    style D5 fill:#B3E5FC,stroke:#4FC3F7,color:#01579B
+
+    %% Special tools
+    style D1 fill:#C8E6C9,stroke:#81C784,color:#1B5E20   
+    style D6 fill:#FFCCBC,stroke:#FF8A65,color:#BF360C   
+
+    style E fill:#C5E1A5,stroke:#AED581,color:#33691E
+```
+
 #### 📋 Planner Agent (Reasoning Layer)
 
 Takes your natural language request (e.g., “merge utils.py and helpers.py into one module”).
@@ -371,57 +422,6 @@ If a step fails (e.g., tests break), the agent will be able to re-plan automatic
 The loop can feed test results or error logs back into the Planner Agent, generating a new plan until success.
 
 This section emphasizes the structured loop, safety-first approach, and extensibility of your agent.
-
-``` mermaid
-flowchart TD
-    %% === NODES ===
-    A([💬 User Request])
-    B([🧠 Planner Agent])
-    C([🔁 Agent Loop])
-    D{{🛠️ Tools}}
-
-    %% Tools
-    D1([🧪 Run Tests])       
-    %% Stadium shape
-    D2([📄 File Creation])
-    D3([🖋️ Refactor Code])
-    D4([🔗 Update Imports])
-    D5([🎨 Format Code])
-    D6[/💾 Backup/]          
-    %% Parallelogram
-
-    E([🏆 Success])
-
-    %% === EDGES ===
-    A --> B -->|Generates JSON Plan| C --> D
-    D -->|run_tests| D1
-    D <-->|create_file| D2
-    D <-->|refactor_code| D3
-    D <-->|update_imports| D4
-    D <-->|format_code| D5
-    D -->|backup_file| D6
-
-    D1 -->|❌ Tests Fail| B
-    D1 -->|✅ Tests Pass| E
-
-    %% === STYLES (softer colors) ===
-    style A fill:#BBDEFB,stroke:#64B5F6,color:#0D47A1
-    style B fill:#E1BEE7,stroke:#BA68C8,color:#4A148C
-    style C fill:#FFE0B2,stroke:#FFB74D,color:#E65100
-    style D fill:#CFD8DC,stroke:#90A4AE,color:#263238
-
-    %% Normal tools - soft blue
-    style D2 fill:#B3E5FC,stroke:#4FC3F7,color:#01579B
-    style D3 fill:#B3E5FC,stroke:#4FC3F7,color:#01579B
-    style D4 fill:#B3E5FC,stroke:#4FC3F7,color:#01579B
-    style D5 fill:#B3E5FC,stroke:#4FC3F7,color:#01579B
-
-    %% Special tools
-    style D1 fill:#C8E6C9,stroke:#81C784,color:#1B5E20   
-    style D6 fill:#FFCCBC,stroke:#FF8A65,color:#BF360C   
-
-    style E fill:#C5E1A5,stroke:#AED581,color:#33691E
-```
 
 ---
 

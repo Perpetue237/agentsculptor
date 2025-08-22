@@ -24,7 +24,7 @@ def update_imports(project_path: str, relative_path: str, instruction: str = Non
     full_path = os.path.join(project_path, relative_path)
 
     if not os.path.exists(full_path):
-        logger.debug(f"[WARN] Path {relative_path} not found for import update.")
+        logger.warning(f"[WARN] Path {relative_path} not found for import update.")
         return
 
     # Folder mode — process recursively
@@ -56,7 +56,7 @@ def update_imports(project_path: str, relative_path: str, instruction: str = Non
         ).strip()
 
         if not updated_code:
-            logger.debug("[WARN] LLM returned empty update for imports, falling back to original code.")
+            logger.warning("[WARN] LLM returned empty update for imports, falling back to original code.")
             updated_code = original_code
 
     with open(full_path, "w", encoding="utf-8") as f:
