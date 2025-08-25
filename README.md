@@ -54,9 +54,17 @@ flowchart TD
     style E fill:#C5E1A5,stroke:#AED581,color:#33691E
 ```
 
+## ⚠️ Disclaimer
+
+AgentSculptor is an experimental project created for the OpenAI Open Model Hackathon.
+It has only been tested with gpt-oss-120b via vLLM.
+
+Other models may work, but compatibility is not guaranteed at this stage. Use at your own risk and please share feedback if you experiment with different setups.
+
 ---
 ## Table of Content
 - [agentsculptor](#agentsculptor)
+  - [⚠️ Disclaimer](#️-disclaimer)
   - [Table of Content](#table-of-content)
   - [🚀 Getting Started / Usage](#-getting-started--usage)
     - [1. Install from PyPI](#1-install-from-pypi)
