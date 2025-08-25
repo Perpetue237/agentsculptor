@@ -25,12 +25,12 @@ flowchart TD
 
     %% === EDGES ===
     A --> B -->|Generates JSON Plan| C --> D
-    D -->|run_tests| D1
-    D <-->|create_file| D2
-    D <-->|refactor_code| D3
-    D <-->|update_imports| D4
-    D <-->|format_code| D5
-    D -->|backup_file| D6
+    D -.->|run_tests| D1
+    D <-.->|create_file| D2
+    D <-.->|refactor_code| D3
+    D <-.->|update_imports| D4
+    D <-.->|format_code| D5
+    D -.->|backup_file| D6
 
     D1 -->|❌ Tests Fail| B
     D1 -->|✅ Tests Pass| E
