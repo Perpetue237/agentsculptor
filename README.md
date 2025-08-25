@@ -1,6 +1,6 @@
 # agentsculptor
 
-**agentsculptor** is an experimental AI-powered development agent designed to **analyze, refactor, and extend Python projects automatically**. 
+**agentsculptor** is a free, open, and local experimental AI-powered development agent designed to **analyze, refactor, and extend Python projects automatically**. 
 It uses an OpenAI-like planner–executor loop on top of a [vLLM](https://github.com/vllm-project/vllm) backend, combining project context analysis, structured tool calls, and iterative refinement.
 
 ``` mermaid
