@@ -12,4 +12,5 @@ venv/
 build/
 dist/
 *.egg-info/
-build.sh
+.devcontainer/build.sh
+submission.md

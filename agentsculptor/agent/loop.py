@@ -118,7 +118,7 @@ class AgentLoop:
                     execution_log=self.execution_log,
                 )
             except RuntimeError as e:
-                logger.fatal("Could not generate plan:", e)
+                logger.fatal(f"Could not generate plan: {e}")
                 print("Please check that vLLM is running and reachable at your VLLM_URL.")
                 sys.exit(1)
 

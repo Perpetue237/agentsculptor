@@ -2,19 +2,20 @@ from setuptools import setup, find_packages
 
 setup(
     name="agentsculptor",
-    version="0.1.3",
+    version="0.1.10",
     author="Perpetue237",
     author_email="youremail@example.com",
-    description="agentsculptor: Shape your AI agents into powerful coding assistants — powered by GPT-OSS and vLLM.",
+    description="AgentSculptor: Refactor, restructure & modernize codebases with natural language — powered by GPT-OSS and vLLM.",
     long_description=open("README.md", "r", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/Perpetue237/agentsculptor",
     project_urls={
         "Bug Tracker": "https://github.com/Perpetue237/agentsculptor/issues",
         "Source": "https://github.com/Perpetue237/agentsculptor",
+        "Demo": "https://youtu.be/uI5hO-2xQ4k",
     },
     packages=find_packages(exclude=["tests*", "test_project*", ".devcontainer*"]),
-    python_requires=">=3.10",
+    python_requires=">=3.12",
     install_requires=[
         "black",
         "pytest",

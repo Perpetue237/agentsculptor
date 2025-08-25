@@ -1,6 +1,6 @@
 # agentsculptor
 
-**agentsculptor** is an experimental AI-powered development agent designed to **analyze, refactor, and extend Python projects automatically**.
+**agentsculptor** is an experimental AI-powered development agent designed to **analyze, refactor, and extend Python projects automatically**. 
 It uses an OpenAI-like planner–executor loop on top of a [vLLM](https://github.com/vllm-project/vllm) backend, combining project context analysis, structured tool calls, and iterative refinement.
 
 ``` mermaid
@@ -59,8 +59,8 @@ flowchart TD
 - [agentsculptor](#agentsculptor)
   - [Table of Content](#table-of-content)
   - [🚀 Getting Started / Usage](#-getting-started--usage)
-    - [1. Clone the repository](#1-clone-the-repository)
-    - [2. Install the package](#2-install-the-package)
+    - [1. Install from PyPI](#1-install-from-pypi)
+    - [2. Or install from source](#2-or-install-from-source)
     - [3. Set environment variables](#3-set-environment-variables)
     - [4. Run CLI commands](#4-run-cli-commands)
     - [5. Other examples](#5-other-examples)
@@ -97,20 +97,19 @@ flowchart TD
 
 ## 🚀 Getting Started / Usage
 
+Python 3.12 or higher is required.
+
+### 1. Install from PyPI
+
 Follow these steps to install and use **agentsculptor**:
 
-### 1. Clone the repository
+### 2. Or install from source
+
+Clone the repository and install in editable mode (for local changes):
 
 ```bash
 git clone https://github.com/Perpetue237/agentsculptor.git
 cd agentsculptor
-```
-
-### 2. Install the package
-
-Use editable mode to allow local changes:
-
-```bash
 pip install -e .
 ```
 
