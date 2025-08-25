@@ -97,11 +97,13 @@ flowchart TD
 
 ## 🚀 Getting Started / Usage
 
-Python 3.12 or higher is required.
+Python 3.12 or higher is required. Follow these steps to install and use **agentsculptor**:
 
 ### 1. Install from PyPI
 
-Follow these steps to install and use **agentsculptor**:
+```bash
+pip install agentsculptor
+```
 
 ### 2. Or install from source
 
