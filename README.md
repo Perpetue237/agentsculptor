@@ -143,7 +143,7 @@ This will:
 ### 5. Other examples
 
 ```bash
-agentsculptor-cli ./test_project "create fast aip app with clear instructions on how to run it."
+agentsculptor-cli ./test_project "create fast api app with clear instructions on how to run it."
   ```
 
 ```bash
