@@ -142,9 +142,21 @@ This will:
 
 ### 5. Other examples
 
-* Merge multiple Python modules into a single file.
-* Refactor functions and automatically generate unit tests.
-* Update imports across the project after refactoring.
+```bash
+agentsculptor-cli ./test_project "create fast aip app with clear instructions on how to run it."
+  ```
+
+```bash
+agentsculptor-cli ./test_project "Merge multiple Python modules into a single file."
+  ```
+
+```bash
+agentsculptor-cli ./test_project "Refactor functions and automatically generate unit tests."
+  ```
+
+```bash
+agentsculptor-cli ./test_project "Refactor my codebase and modernize. Update imports across the project after refactoring."
+  ```
 
 ### 6. Workflow Overview
 
