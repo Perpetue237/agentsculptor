@@ -13,20 +13,29 @@ It is configured for large-scale models (here: `openai/gpt-oss-120b`) and GPU ac
    git clone https://github.com/Perpetue237/agentsculptor
    cd agentsculptor/vllm-server-config
    ```
-
-2. **Start the vLLM server:**
+2. **Install the Hugging Face CLI** (needed to authenticate and download the model weights):
+   >**Note:** make sure to have pip installed!
+   ```bash
+   pip install --upgrade "huggingface_hub[cli]"
+   ```
+3. **Login to Hugging Face:**
+   ```bash
+   huggingface-cli login
+   ```
+   👉 Generate an access token from your [Hugging Face account settings](https://huggingface.co/login?next=%2Fsettings%2Ftokens%3Futm_source%3Dchatgpt.com)
+4. **Start the vLLM server:**
 
     ```bash
     docker compose up -d
     ```
 
-3. **Verify that the container is running:**
+5. **Verify that the container is running:**
 
     ```bash
     docker ps
     ```
 
-4. **The vLLM server will be available at:**
+6. **The vLLM server will be available at:**
 
     http://localhost:8008/v1/
 
